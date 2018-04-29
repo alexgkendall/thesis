@@ -1,0 +1,33 @@
+%!TEX root = ../thesis.tex
+% ******************************* Thesis Appendix A ****************************
+\chapter{Derivations for Aleatoric Uncertainty Losses}
+
+We show results for both Gaussian and Laplacian priors.
+
+\subsection{Gaussian Prior}
+
+The probability density function for the Gaussian distribution is given by:
+\begin{equation}
+P(x) = \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}
+\end{equation}
+We wish our neural network to learn to estimate the distribution function. To construct the optimisation objective we take the negative log likelihood of this distribution.
+% \begin{equation}
+% \begin{split}
+% Loss &= - \log P(x) 
+% &= -\log (\frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}})
+% &= -\log \frac{1}{{\sigma \sqrt {2\pi } }} -\log (e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}})
+% \end{split}
+% \end{equation}
+
+\begin{equation}
+\cL_\text{NN}(\theta) = \frac{1}{N} \sum_{i=1}^N \frac{1}{2\sigma(\x_i)^2} ||\y_i - \f(\x_i)||^2 + \frac{1}{2} \log \sigma(\x_i)^2
+\end{equation}
+
+
+\subsection{Laplacian Prior}
+
+\begin{equation}
+-\log p(\y_i | \f^{\Wh_i}(\x_i)) \propto \frac{1}{\sigma^2}||\y_i - \f^{\Wh_i}(\x_i)|| + \log \sigma^2 
+\end{equation}
+
+Therefore, we can see that using a Laplacian prior results in an L1 distance to form the residuals. This is typically better for vision models as it does not over-emphasise the significance of large residuals. These outliers may be due to noise or other factors.
