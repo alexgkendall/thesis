@@ -88,7 +88,7 @@ First, as the most powerful demonstration of perception, how does the human visu
 Secondly, it simply is not scalable to hand-design an algorithm
 to support and adapt to complicated and dynamic data such as our visual world. Modern computer vision algorithms contain over 100 million parameters. Input data is very high dimensional, typically containing several million pixels being streamed over time. To date, we have been unable to specify hand-engineered rules to design top-performing architectures. To understand large amounts of data at scale we need to learn.
 
-While there are many examples of machine learning models, \textit{deep convolutional neural networks} \citep{Fukushima1979neocognitron,krizhevsky2012imagenet} are most effective for vision tasks. Convolutional neural networks are a subset of deep learning which are particularly useful for computer vision because they are spatially invariant. Algorithms like stochastic gradient descent and backpropagation \citep{lecun88} can train networks containing millions of parameters. These networks can be optimised from a loss function formulated from supervised labelled training data or unsupervised learning.
+While there are many examples of machine learning models, \textit{deep convolutional neural networks} \citep{Fukushima1979neocognitron,krizhevsky2012imagenet} are most effective for vision tasks. Convolutional neural networks are a subset of deep learning which are particularly useful for computer vision because they are spatially invariant. Algorithms like stochastic gradient descent \citep{kiefer1952stochastic} and backpropagation \citep{rumelhart1986learning} can train networks containing millions of parameters. These networks can be optimised from a loss function formulated from supervised labelled training data or unsupervised learning.
 
 Deep learning models have typically been restricted to classification settings. They excel at sub-sampling data and expanding feature dimensions to make classifications at an image level \citep{krizhevsky2012imagenet}. Applying these models to other problems in computer vision is more challenging. This is because other computer vision tasks require representations for recognition, registration or reconstruction \citep{cipolla2010computer}. Standard recognition encoder networks \citep{krizhevsky2012imagenet,simonyan2013deep,he2004multiscale} cannot be naively applied to these domains. This thesis proposes a broader range of deep learning architectures for many other computer vision problems.
 
@@ -146,7 +146,7 @@ Some extracts from this thesis appear in the following co-authored publications 
 \begin{itemize}
 \item Vijay Badrinarayanan, Alex Kendall and Roberto Cipolla. SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2017.
 \item Alex Kendall and Yarin Gal. What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision? Advances in Neural Information Processing Systems, 2017.
-\item Alex Kendall, Yarin Gal and Roberto Cipolla. Multi-Task Learning Using Uncertainty to Weigh Losses for Scene Geometry and Semantics. arXiv preprint arXiv:1705.07115, 2017.
+\item Alex Kendall, Yarin Gal and Roberto Cipolla. Multi-Task Learning Using Uncertainty to Weigh Losses for Scene Geometry and Semantics. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2018.
 \end{itemize}
 \cref{localisation} is adapted from:
 \begin{itemize}
@@ -157,11 +157,10 @@ Some extracts from this thesis appear in the following co-authored publications 
 \cref{stereo} extends:
 \begin{itemize}
 \item Alex Kendall, Hayk Martirosyan, Saumitro Dasgupta, Peter Henry, Ryan Kennedy, Abraham Bachrach, and Adam Bry. End-to-End Learning of Geometry and Context for Deep Stereo Regression. Proceedings of the International Conference on Computer Vision, 2017.
-\item Alex Kendall and Roberto Cipolla. Uncertainty and Unsupervised Learning for Stereo Vision. Under Review, 2017.
 \end{itemize}
 And finally, \cref{motion} is adapted from:
 \begin{itemize}
-\item Alex Kendall and Roberto Cipolla. VideoSegNet: Learning Motion and Geometry for Video Semantic Segmentation. Under Review, 2017.
+\item Alex Kendall and Roberto Cipolla. Learning Semantics, Motion and Geometry for Video Scene Understanding. Under Review, 2017.
 \end{itemize}
 
 \section{Thesis Structure}

@@ -16,7 +16,7 @@
 \begin{figure}[t]
 \center
 \includegraphics[width=\textwidth]{segnet/CamVidTeaserwithIndoorScenes.jpg}
-\caption[SegNet semantic segmentation predictions on indoor and outdoor scenes.]{SegNet predictions on urban and highway scene test samples from the wild. To try our system yourself, please see our online web demo at \url{http://mi.eng.cam.ac.uk/projects/segnet/}.}
+\caption[SegNet semantic segmentation predictions on indoor and outdoor scenes.]{SegNet predictions on indoor and outdoor scene test samples from the wild. To try our system yourself, please see our online web demo at \url{http://mi.eng.cam.ac.uk/projects/segnet/}.}
 \label{Teaser}
 \end{figure}
 
@@ -32,17 +32,17 @@ However, scene understanding requires joint knowledge of semantics and geometry.
 \label{segmentation}
 
 We begin by introducing the task of semantic segmentation, which is a core task in scene understanding. Semantic pixel-wise segmentation requires an estimate of each pixel's semantic class (see \cref{Teaser}).
-It is an active topic of research, fuelled by challenging datasets \citep{brostow2009semantic,silberman2012indoor,Geiger2012CVPR,pascal,song2015sun,Cordts2016Cityscapes}. Before the arrival of deep learning, the best performing methods mostly relied on hand engineered features classifying pixels independently. Typically, an image patch was fed into a classifier, \textit{e.g.} random forests \citep{Jamie2,brostow2008segmentation} or boosting \citep{Sturgess,LadickyECCV}, to predict the class probabilities of the centre pixel. Features based on appearance \citep{Jamie2} or motion and appearance \citep{brostow2008segmentation,Sturgess, LadickyECCV} have been explored. These per-pixel noisy predictions (often called \textit{unary} terms) from the classifiers are then smoothed by using a pair-wise (or higher order) conditional random fields (CRFs) \citep{Sturgess,LadickyECCV} to improve the accuracy. More recent approaches have aimed to produce high quality unaries by trying to predict the labels for all the pixels in a patch as opposed to only the centre pixel. This improves the results of random forest based unaries \citep{kontschieder2011structured}, but reduces performance on thin structures. Dense depth maps have also been used as input for classification using Random Forests \citep{zhang2010semantic}. Another approach argues for the use of a combination of popular hand designed features and spatio temporal super-pixels to obtain higher accuracy \citep{tighe2013superparsing}.
+It is an active topic of research, fuelled by challenging datasets \citep{brostow2009semantic,silberman2012indoor,Geiger2012CVPR,pascal,song2015sun,Cordts2016Cityscapes}. Before the arrival of deep learning, the best performing methods mostly relied on hand engineered features classifying pixels independently. Typically, an image patch was fed into a classifier, \textit{e.g.} random forests \citep{Jamie2,brostow2008segmentation} or boosting \citep{Sturgess,LadickyECCV}, to predict the class probabilities of the centre pixel. Features based on appearance \citep{Jamie2} or motion and appearance \citep{brostow2008segmentation,Sturgess, LadickyECCV} have been explored. These per-pixel noisy predictions (often called \textit{unary} terms) from the classifiers are then smoothed by using pair-wise (or higher order) conditional random fields (CRFs) \citep{Sturgess,LadickyECCV} to improve the accuracy. More recent approaches have aimed to produce high quality unaries by trying to predict the labels for all the pixels in a patch as opposed to only the centre pixel. This improves the results of random forest based unaries \citep{kontschieder2011structured}, but reduces performance on thin structures. Dense depth maps have also been used as input for classification using Random Forests \citep{zhang2010semantic}. Another approach argues for the use of a combination of popular hand designed features and spatio temporal super-pixels to obtain higher accuracy \citep{tighe2013superparsing}.
 
 Indoor RGB-D pixel-wise semantic segmentation has also gained popularity since the release of the NYU dataset \citep{silberman2012indoor} which contains labelled RGB-D data collected from a Kinect sensor. Many papers demonstrate that inputting depth modality significantly improves segmentation performance \citep{ren2012rgb,silberman2012indoor,Hermans14ICRA,gupta2013perceptual}. However, all these methods use hand-engineered features for classifying RGB-D images. 
 
 The success of deep convolutional neural networks for object classification has more recently led to researchers to exploit their feature learning capabilities for structured prediction problems such as segmentation. There have also been attempts to apply networks designed for object categorization to segmentation, particularly by replicating the deepest layer features in blocks to match image dimensions \citep{FarabetPAMI,FarabetPurityCover,Grangier,Gatta}. However, the resulting classification is coarse \citep{Grangier}. Another approach using recurrent neural networks \citep{pinheiro2014recurrent} merges several low resolution predictions to create input image resolution predictions. These techniques are already an improvement over hand engineered features \citep{FarabetPAMI} but their ability to delineate boundaries is poor. 
 
-Newer deep architectures \citep{long2015fully,NohDeconvNets,eigen2015predicting,DecoupledNet,CRFRNN} particularly designed for segmentation have advanced the state-of-the-art by learning to decode or map low resolution image representations to pixel-wise predictions. These methods rely on pre-trained features from the large ImageNet object classification dataset \citep{deng2009imagenet}. For example, Fully Convolutional Networks (FCN) \citep{long2015fully} learns to up-sample its input feature map(s) and combines them with the corresponding encoder feature map to produce a dense output. It has a large number of trainable parameters in the encoder network (134M) but a very small decoder network (0.5M). The overall large size of this network makes it hard to train end-to-end on a relevant task. Therefore, the authors use a stage-wise training process. Each decoder in the decoder network is progressively added to an existing trained network. The network is grown until no further increase in performance is observed. 
+Newer deep architectures \citep{long2015fully,NohDeconvNets,eigen2015predicting,DecoupledNet,CRFRNN} particularly designed for segmentation have advanced the state-of-the-art by learning to decode or map low resolution image representations to pixel-wise predictions. These methods rely on pre-trained features from the large ImageNet object classification dataset \citep{deng2009imagenet}. For example, Fully Convolutional Networks (FCN) \citep{long2015fully} learn to up-sample its input feature map(s) and combines them with the corresponding encoder feature map to produce a dense output. It has a large number of trainable parameters in the encoder network (134M) but a very small decoder network (0.5M). The overall large size of this network makes it hard to train end-to-end on a relevant task. Therefore, the authors use a stage-wise training process. Each decoder in the decoder network is progressively added to an existing trained network. The network is grown until no further increase in performance is observed. 
 
 The approach in FCN forms the \textit{core segmentation engine} for a number of other approaches \citep{ParseNetRabinovich,UrtasunSegmentation,CRFRNN,chen2016deeplab}. These methods append CRFs as a post-processing method to clean the segmentation. These methods are slow as they require either MAP inference over a CRF \citep{lin2015efficient}, \citep{UrtasunSegmentation} or aids such as region proposals \citep{NohDeconvNets} for inference. We believe the perceived performance increase obtained by using a CRF is due to the lack of good decoding techniques in their core feed-forward segmentation engine. 
 
-Multi-scale deep architectures are also being pursued \citep{eigen2015predicting,lin2015efficient,hariharan2015hypercolumns,ParseNetRabinovich}. The common idea is to use features extracted at multiple scales to provide both local and global context \citep{mostajabi2014feedforward} and the using feature maps of the early encoding layers retain more high frequency detail leading to sharper class boundaries. Some of these architectures are difficult to train due to their large parameter size \citep{eigen2015predicting}. Again, a multi-stage training process is employed along with data augmentation. Inference is also expensive with multiple convolutional pathways for feature extraction.
+Multi-scale deep architectures are also being pursued \citep{eigen2015predicting,lin2015efficient,hariharan2015hypercolumns,ParseNetRabinovich}. The common idea is to use features extracted at multiple scales to provide both local and global context \citep{mostajabi2014feedforward}. Feature maps from the early encoding layers retain more high frequency detail leading to sharper class boundaries. Some of these architectures are difficult to train due to their large parameter size \citep{eigen2015predicting}. Again, a multi-stage training process is employed along with data augmentation. Inference is also expensive with multiple convolutional pathways for feature extraction.
 
 All of the latest state-of-the-art semantic segmentation models use supervised deep learning \citep{badrinarayanan2017segnet,long2015fully}, benefiting from residual architectures \citep{he2016deep,huang2017densely}. Recent work has focused on improving the receptive field of features and providing them with more context for semantic reasoning, for example using dilated convolutions \citep{YuKoltun2016} and pyramid spatial pooling \citep{zhao2017pspnet}. We have also seen semantic segmentation combined with other tasks, such as instance segmentation \citep{he2017maskrcnn} and geometry \citep{kendall2017multi} in multi-task learning settings.
 
@@ -64,7 +64,7 @@ Our architecture, SegNet, is designed to be a \textit{core segmentation engine} 
 
 SegNet has an encoder network and a corresponding decoder network, followed by a final pixel-wise classification layer. This architecture is illustrated in \cref{SegNetArchitecture}. The encoder network consists of $13$ convolutional layers which is topologically identical to the convolutional layers in VGG16 \citep{simonyan2014very}. We can therefore initialize the training process from weights trained for classification on large datasets \citep{deng2009imagenet}. We remove the fully connected layers of VGG16 which makes the SegNet encoder network significantly smaller (from $134$ million parameters to $14.7$ million) than many other recent architectures \citep{long2015fully,NohDeconvNets,ParseNetRabinovich,DecoupledNet}. 
 
-The key component of SegNet is the decoder network which consists of a hierarchy of decoders one corresponding to each encoder. Of these, the appropriate decoders use the max-pooling indices received from the corresponding encoder to perform non-linear upsampling of their input feature maps. This idea was inspired from an architecture designed for unsupervised feature learning \citep{Ranzato}. Reusing max-pooling indices in the decoding process has several practical advantages; (i) it improves boundary delineation, (ii) it reduces the number of  parameters enabling end-to-end training, and (iii) this form of upsampling can be incorporated into any encoder-decoder architecture such as \citep{long2015fully,CRFRNN} with slight modification. The final decoder output is fed to a multi-class softmax classifier to produce class probabilities for each pixel independently.
+The key component of SegNet is the decoder network which consists of a hierarchy of decoders one corresponding to each encoder. Of these, the appropriate decoders use the max-pooling indices received from the corresponding encoder to perform non-linear upsampling of their input feature maps. This idea was inspired from an architecture designed for unsupervised feature learning \citep{Ranzato}. Reusing max-pooling indices in the decoding process has several practical advantages; (i) it improves boundary delineation, (ii) it reduces the number of  parameters enabling end-to-end training, and (iii) this form of upsampling can be incorporated into any encoder-decoder architecture such as \citet{long2015fully} or \citet{CRFRNN} with slight modification. The final decoder output is fed to a multi-class softmax classifier to produce class probabilities for each pixel independently.
 
 Each \textit{encoder} in the encoder network performs convolution with a filter bank to produce a set of feature maps. These are then batch normalized \citep{BN}). Then an element-wise rectified-linear non-linearity (ReLU) $max(0,x)$ is applied. Following that, max-pooling with a $2\times2$ window and stride $2$ (non-overlapping window) is performed and the resulting output is sub-sampled by a factor of $2$. Max-pooling is used to achieve translation invariance over small spatial shifts in the input image. Sub-sampling results in a large receptive field for each pixel in the feature map. However, sub-sampling reduces spatial resolution of the features which is not beneficial for segmentation where boundary delineation is vital. Therefore, it is necessary to \textit{capture and store} boundary information in the encoder feature maps before sub-sampling is performed. If memory during inference is not constrained, then all the encoder feature maps (after sub-sampling) can be stored. This is usually not the case in practical applications and hence we propose a more efficient way to store this information. It involves storing only the max-pooling \textit{indices}, i.e, the locations of the maximum feature value in each pooling window is memorized for each encoder feature map. In principle, this can be done using 2 bits for each $2\times2$ pooling window and is thus much more efficient to store as compared to memorizing feature map(s) in float precision (such as U-Net \citep{ronneberger2015u}). As we show later in this work, this lower memory storage results in a slight loss of accuracy but is still suitable for practical applications.
 
@@ -88,7 +88,7 @@ In order to analyse SegNet and compare its performance with other decoder varian
 
 On the left in \cref{Upsampling} is the decoding technique used by SegNet (also SegNet-Basic), where there is no learning involved in the upsampling step. However, the upsampled maps are convolved with trainable multi-channel decoder filters to densify the sparse inputs. Each decoder filter has the same number of channels as the number of upsampled feature maps. A smaller variant is one where the decoder filters are single channel, i.e they only convolve their corresponding upsampled feature map. This variant (\textbf{SegNet-Basic-SingleChannelDecoder}) reduces the number of trainable parameters and inference time significantly.
 
-On the right in \cref{Upsampling} is the FCN (also FCN-Basic) decoding technique \citep{long2015fully}. The important design element of the FCN model is dimensionality reduction step of the encoder feature maps. This \textit{compresses} the encoder feature maps which are then used in the corresponding decoders. Dimensionality reduction of the encoder feature maps, say of 64 channels, is performed by convolving them with $1\times 1\times 64\times K$ trainable filters, where $K$ is the number of classes. The compressed $K$ channel final encoder layer feature maps are the input to the decoder network. In a decoder of this network, upsampling is performed by convolution using a trainable \textit{multi-channel upsampling kernel}. We set the kernel size to $8\times8$. This manner of upsampling is also termed as \textit{sub-pixel convolution}, \textit{deconvolution} or \textit{transposed convolution}. Note that in SegNet the multi-channel convolution using trainable decoder filters is performed after upsampling to densifying feature maps. The upsampled feature map in FCN is then added to the corresponding resolution encoder feature map to produce the output decoder feature map. The upsampling kernels are initialized using bilinear interpolation weights \citep{long2015fully}. 
+On the right in \cref{Upsampling} is the FCN (also FCN-Basic) decoding technique \citep{long2015fully}. The important design element of the FCN model is the dimensionality reduction step of the encoder feature maps. This \textit{compresses} the encoder feature maps which are then used in the corresponding decoders. Dimensionality reduction of the encoder feature maps, say of 64 channels, is performed by convolving them with $1\times 1\times 64\times K$ trainable filters, where $K$ is the number of classes. The compressed $K$ channel final encoder layer feature maps are the input to the decoder network. In a decoder of this network, upsampling is performed by convolution using a trainable \textit{multi-channel upsampling kernel}. We set the kernel size to $8\times8$. This manner of upsampling is also termed as \textit{sub-pixel convolution}, \textit{deconvolution} or \textit{transposed convolution}. Note that in SegNet the multi-channel convolution using trainable decoder filters is performed after upsampling to densifying feature maps. The upsampled feature map in FCN is then added to the corresponding resolution encoder feature map to produce the output decoder feature map. The upsampling kernels are initialized using bilinear interpolation weights \citep{long2015fully}. 
 
 The FCN decoder model requires storing encoder feature maps during inference. This can be memory intensive, for e.g. storing 64 feature maps of the first layer of FCN-Basic at $180\times240$ resolution in 32 bit floating point precision takes 11MB. This can be made smaller using dimensionality reduction to the 11 feature maps which requires $\approx$ 1.9MB storage. SegNet on the other hand requires almost negligible storage cost for the pooling indices ($0.17$MB if stored using 2 bits per $2\times2$ pooling window). We can also create a variant of the FCN-Basic model which discards the encoder feature map addition step and only learns the upsampling kernels (\textbf{FCN-Basic-NoAddition}). 
 
@@ -131,11 +131,16 @@ FCN-Basic-NoAddition-NoDimReduction &1.625 & 0 & 43.9 & 80.5 & 61.6 & 45.9 & 83.
 \end{table*}
 \end{landscape}}
 
-We use the CamVid road scenes dataset to benchmark the performance of the decoder variants. This dataset is small, consisting of 367 training and 233 testing RGB images (day and dusk scenes) at $360\times480$ resolution. The challenge is to segment $11$ classes such as road, building, cars, pedestrians, signs, poles, side-walk \textit{etc}. We perform local contrast normalization \citep{Jarrett} to the RGB input.
+We use the CamVid road scenes dataset \citep{brostow2009semantic} to benchmark the performance of the decoder variants. This dataset is small, consisting of 367 training and 233 testing RGB images (day and dusk scenes) at $360\times480$ resolution. The challenge is to segment $11$ classes such as road, building, cars, pedestrians, signs, poles, side-walk \textit{etc}. We perform local contrast normalization \citep{Jarrett} to the RGB input.
 
 The encoder and decoder weights were all initialized using the technique described in He \emph{et~al.} \citep{he2015delving}. To train all the variants we use stochastic gradient descent (SGD) with a fixed learning rate of 0.1 and momentum of 0.9 \citep{Bottou} using our Caffe implementation of SegNet-Basic \citep{jia2014caffe}. We train the variants until the training loss converges. Before each epoch, the training set is shuffled and each mini-batch (12 images) is then picked in order thus ensuring that each image is used only once in an epoch. We select the model which performs highest on a validation dataset.
 
-We use the cross-entropy loss \citep{long2015fully} as the objective function for training the network. The loss is averaged up over all the pixels in a mini-batch which contain a valid label. When there is large variation in the number of pixels in each class in the training set (e.g road, sky and building pixels dominate the CamVid dataset) then there is a need to weight the loss differently based on the true class. This is termed \textit{class balancing}. We use \textit{median frequency balancing} \citep{eigen2015predicting} where the weight assigned to a class in the loss function is the ratio of the median of class frequencies computed on the entire training set divided by the class frequency. This implies that larger classes in the training set have a weight smaller than $1$ and the weights of the smallest classes are the highest. We also experimented with training the different variants without class balancing or equivalently using \textit{natural frequency balancing}.
+We use the cross-entropy loss \citep{long2015fully} as the objective function for training the network. The loss is averaged up over all the pixels in a mini-batch which contain a valid label. When there is large variation in the number of pixels in each class in the training set (e.g road, sky and building pixels dominate the CamVid dataset) then there is a need to weight the loss differently based on the true class. This is termed \textit{class balancing}. We use \textit{median frequency balancing} where the weight assigned to a class in the loss function is the ratio of the median of class frequencies computed on the entire training set divided by the class frequency. Therefore, we weight each pixel's loss by
+\begin{equation}
+\alpha = medianfreq / freq(c),
+\end{equation}
+where $freq(c)$ is the number of pixels of class $c$ in the dataset, divided by the total number of pixels in images where $c$ is present, and $medianfreq$ is the median of these frequencies.
+This implies that larger classes in the training set have a weight smaller than $1$ and the weights of the smallest classes are the highest. We also experimented with training the different variants without class balancing or equivalently using \textit{natural frequency balancing}.
 
 \subsection{Analysis}
 \label{Analysis}
@@ -150,11 +155,11 @@ From the Table \ref{PoolingQuantCAFFE}, we see that bilinear interpolation based
 When we compare SegNet-Basic and FCN-Basic we see that both perform equally well on this test over all the three measures of accuracy. The difference is that SegNet uses less \textbf{memory} during inference since it only stores max-pooling indices. On the other hand FCN-Basic stores \textbf{encoder feature maps} in full which consumes much more memory (11 times more). SegNet-Basic has a decoder with 64 feature maps in each decoder layer. In comparison FCN-Basic, which uses dimensionality reduction, has fewer (11) feature maps in each decoder layer. This reduces the number of convolutions in the decoder network and hence FCN-Basic is faster during inference (forward pass). From another perspective, the decoder network in SegNet-Basic makes it overall a larger network than FCN-Basic. This endows it with more flexibility and hence achieves higher training accuracy than FCN-Basic for the same number of iterations. Overall we see that SegNet-Basic has an advantage over FCN-Basic when memory during inference is constrained but where inference time can be compromised to an extent. 
 
 SegNet-Basic is most similar to FCN-Basic-NoAddition in terms of their decoders, although the decoder of SegNet is larger. Both learn to produce dense feature maps, either directly by learning to perform deconvolution as in FCN-Basic-NoAddition or by first upsampling and then convolving with trained decoder filters. 
-The performance of SegNet-Basic is superior, in part due to its larger decoder size. Now, the accuracy of FCN-Basic-NoAddition is also lower as compared to FCN-Basic. This shows that it is important to capture the information present in the encoder feature maps for better performance. This can also explain the part of the reason why SegNet-Basic outperforms FCN-Basic-NoAddition. 
+The performance of SegNet-Basic is superior, in part due to its larger decoder size. Now, the accuracy of FCN-Basic-NoAddition is also lower as compared to FCN-Basic. This shows that it is important to capture the information present in the encoder feature maps for better performance. This can also explain the reason why SegNet-Basic outperforms FCN-Basic-NoAddition. 
 
 The size of the FCN-Basic-NoAddition-NoDimReduction model is slightly larger than SegNet-Basic and this makes it a fair comparison. The performance of this FCN variant is poorer than SegNet-Basic in test but also its training accuracy is lower for the same number of training epochs. This shows that using a larger decoder is not enough but it is also important to capture encoder feature map information to learn better. Here it is also interesting to see that SegNet-Basic has a competitive training accuracy when compared to larger models such FCN-Basic-NoDimReduction. 
 
-Another interesting comparison between FCN-Basic-NoAddition and SegNet-Basic-SingleChannelDecoder shows that using max-pooling indices for upsampling and an overall larger decoder leads to better performance. This also lends evidence to SegNet being a good architecture for segmentation, particularly when there is a need to find a compromise between storage cos, accuracy versus inference time. In the best case, when both memory and inference time is not constrained, larger models such as FCN-Basic-NoDimReduction and SegNet-EncoderAddition are both more accurate than the other variants. Particularly, discarding dimensionality reduction in the FCN-Basic model leads to the best performance amongst the FCN-Basic variants. This once again emphasizes the trade-off involved between memory and accuracy in segmentation architectures.
+Another interesting comparison between FCN-Basic-NoAddition and SegNet-Basic-SingleChannelDecoder shows that using max-pooling indices for upsampling and an overall larger decoder leads to better performance. This also lends evidence to SegNet being a good architecture for segmentation, particularly when there is a need to find a compromise between storage cost or accuracy against inference time. In the best case, when both memory and inference time is not constrained, larger models such as FCN-Basic-NoDimReduction and SegNet-EncoderAddition are both more accurate than the other variants. Particularly, discarding dimensionality reduction in the FCN-Basic model leads to the best performance amongst the FCN-Basic variants. This once again emphasizes the trade-off involved between memory and accuracy in segmentation architectures.
 
 The last column of Table \ref{PoolingQuantCAFFE} show the result when no class balancing is used (natural frequency). Here, we can observe that without weighting the results are poorer for all the variants, particularly for class average accuracy and mean IoU metric. The global accuracy is the highest without weighting since the majority of the scene is dominated by sky, road and building pixels. Apart from this all the inference from the comparative analysis of variants holds true for natural frequency balancing too. SegNet-Basic performs as well as FCN-Basic and is better than the larger FCN-Basic-NoAddition-NoDimReduction. The bigger but less efficient models FCN-Basic-NoDimReduction and SegNet-EncoderAddition perform better than the other variants.
 
@@ -237,9 +242,9 @@ Boosting+Detectors+CRF \citep{LadickyECCV}   & 81.5     & 76.6 & 96.2 & 78.7 & 4
 \end{table*}
 \end{landscape}}
 
-The quantitative results in Table \ref{CamVidQuant} show SegNet-Basic, SegNet obtain competitive results even without CRF based processing. This shows the ability of the deep architecture to extract meaningful features from the input image and map it to accurate and smooth class segment labels. SegNet is better in performance than SegNet-Basic although trained with the same (small) training set. This indicates the importance of using pre-trained encoder weights and a deeper architecture. Interestingly, the use of the bigger and deeper SegNet architecture improves the accuracy of the larger classes as compared to SegNet-Basic and not the smaller classes as one might expect. We also find that SegNet-Basic \citep{SegNetarXiv} trained in a layer-wise manner using L-BFGS \citep{Nocedal} also performs competitively and is better than SegNet-Basic trained with SGD (see Sec. \ref{Training}). This is an interesting training approach but needs further research in order for it scale to larger datasets.
+The quantitative results in Table \ref{CamVidQuant} show SegNet-Basic and SegNet obtain competitive results, even without CRF based processing. This shows the ability of the deep architecture to extract meaningful features from the input image and map it to accurate and smooth class segment labels. SegNet is better in performance than SegNet-Basic although trained with the same (small) training set. This indicates the importance of using pre-trained encoder weights and a deeper architecture. Interestingly, the use of the bigger and deeper SegNet architecture improves the accuracy of the larger classes as compared to SegNet-Basic and not the smaller classes as one might expect. We also find that SegNet-Basic \citep{SegNetarXiv} trained in a layer-wise manner using L-BFGS \citep{Nocedal} also performs competitively and is better than SegNet-Basic trained with SGD (see Sec. \ref{Training}). This is an interesting training approach but needs further research in order for it scale to larger datasets.
 
-The most interesting result is the approximately $15\%$ performance improvement in class average accuracy that is obtained with a large training dataset, obtained by combining \citep{gould2009decomposing,russell2008labelme,brostow2009semantic,Geiger2012CVPR}. The mean of intersection over union metric is also very high. Correspondingly, the qualitative results of SegNet (see \cref{CamVidQualy}) are clearly superior to the rest of the methods. It is able to segment both small and large classes well. In addition, there is an overall smooth quality of segmentation much like what is typically obtained with CRF post-processing. Although the fact that results improve with larger training sets is not surprising, the percentage improvement obtained using pre-trained encoder network and this training set indicates that this architecture can potentially be deployed for practical applications. Our random testing on urban and highway images from the internet (see \cref{Teaser}) demonstrates that SegNet can \textit{absorb} a large training set and generalize well to unseen images. It also indicates the contribution of the prior (CRF) can be lessened when sufficient amount of training data is made available.
+The most interesting result is the approximately $15\%$ performance improvement in class average accuracy that is obtained with a large training dataset, obtained by combining \citet{gould2009decomposing}, \citet{russell2008labelme}, \citet{brostow2009semantic} and \citet{Geiger2012CVPR}. The mean of intersection over union metric is also very high. Correspondingly, the qualitative results of SegNet (see \cref{CamVidQualy}) are clearly superior to the rest of the methods. It is able to segment both small and large classes well. In addition, there is an overall smooth quality of segmentation much like what is typically obtained with CRF post-processing. Although the fact that results improve with larger training sets is not surprising, the percentage improvement obtained using a pre-trained encoder network and this training set indicates that this architecture can potentially be deployed for practical applications. Our random testing on urban and highway images from the internet (see \cref{Teaser}) demonstrates that SegNet can \textit{absorb} a large training set and generalize well to unseen images. It also indicates the contribution of the prior (CRF) can be lessened when sufficient amount of training data is made available.
 
 \subsubsection{SUN RGB-D Indoor Scenes}
 \label{SUNRGBD}
@@ -251,9 +256,9 @@ The most interesting result is the approximately $15\%$ performance improvement 
 \label{SUNRGBDQualy}
 \end{figure*}
 
-Road scene images have limited variation, both in terms of the classes of interest and their spatial arrangements, especially when captured in a single sequence from a moving vehicle. In comparison, images of indoor scenes are more complex since the view points can vary significantly and there is less regularity in both the number of classes present in a scene and their spatial arrangement. Another difficulty is caused by the widely varying sizes of the object classes in the scene. Some test samples from the recent SUN RGB-D dataset \citep{song2015sun} are shown in \cref{SUNRGBDQualy}. We observe some scenes with few large classes and some others with dense clutter (bottom row and right). The appearance (texture and shape) can also widely vary in indoor scenes. Therefore, we believe this is the hardest challenge for segmentation architectures and methods in computer vision. Other challenges such as Pascal VOC12 \citep{pascal} salient object segmentation have occupied researchers more, but indoor scene segmentation is more challenging and has more practical applications such as in robotics. Our model advances state-of-the-art on the large SUN RGB-D dataset.
+Road scene images have limited variation, both in terms of the classes of interest and their spatial arrangements, especially when captured in a single sequence from a moving vehicle. In comparison, images of indoor scenes are more complex since the view points can vary significantly and there is less regularity in both the number of classes present in a scene and their spatial arrangement. Another difficulty is caused by the widely varying sizes of the object classes in the scene. Some test samples from the recent SUN RGB-D dataset \citep{song2015sun} are shown in \cref{SUNRGBDQualy}. We observe some scenes with few large classes and some others with dense clutter (bottom row and right). The appearance (texture and shape) can also widely vary in indoor scenes. Therefore, we believe this is the hardest challenge for segmentation architectures and methods in computer vision. Other challenges such as Pascal VOC12 \citep{pascal} salient object segmentation have occupied researchers, but indoor scene segmentation is more challenging and has more practical applications such as in robotics. Our model advances state-of-the-art on the large SUN RGB-D dataset.
 
-The qualitative results of SegNet on some images of indoor scenes of different types such as bedroom, kitchen, bathroom, classroom etc. are shown in \cref{SUNRGBDQualy}. We see that SegNet obtains sharp boundaries between classes when the scene consists of reasonable sized classes but even when view point changes are present (see bed segmentation from different view points). This is particularly interesting since the input modality is only RGB. It indicates the ability of SegNet to extract features from RGB images which are useful for view-point invariant segmentation provided there is sufficient training data (here 5285 images). RGB images are also useful to segment thinner structures such as the legs of chairs and tables, lamps which is difficult to achieve using depth images from currently available sensors. It is also useful to segment decorative objects such as paintings on the wall. 
+The qualitative results of SegNet on some images of indoor scenes of different types such as bedroom, kitchen, bathroom, classroom etc. are shown in \cref{SUNRGBDQualy}. We see that SegNet obtains sharp boundaries between classes when the scene consists of reasonable sized classes but even when viewpoint changes are present (see bed segmentation from different view points). This is particularly interesting since the input modality is only RGB. It indicates the ability of SegNet to extract features from RGB images which are useful for view-point invariant segmentation provided there is sufficient training data (here 5285 images). RGB images are also useful to segment thinner structures such as the legs of chairs and tables, lamps which is difficult to achieve using depth images from currently available sensors. It is also useful to segment decorative objects such as paintings on the wall. 
 
 In Table \ref{SUNRGBDtest} we report the quantitative results on the $37$ class segmentation task. We first note here that the other methods that have been benchmarked are not based on deep architectures and they only report class average accuracy. The existing top performing method \citep{ren2012rgb} relies on hand engineered features using colour, gradients and surface normals for describing super-pixels and then smooths super-pixel labels with a CRF. For SegNet we achieve a high global accuracy which correlates with an overall smooth segmentation. This also suggests that largest classes such as wall, floor, bed, table, sofa are segmented well in spite of view-point changes and appearance variations. However, the class average accuracy and mean IoU metric are poor, but at the same level as the hand engineered method which also includes the depth channel as input. This shows that smaller and thinner classes which have lesser training data are not segmented well. The individual class accuracies are reported in Table \ref{SUNRGBDClassavg}. From these we see that there is a clear correlation between the size and natural frequency of occurrence of classes and their individual accuracies. It is also informative to note RGB input is useful to segment widely varying (shape, texture) categories such as wall, floor, ceiling, table, chair, sofa with reasonable accuracy.
 
@@ -269,7 +274,7 @@ SegNet            & \textbf{70.3}                & 35.6               & \textbf{
 Liu \emph{et~al.}   \citep{SIFT_flow}    & n/a                  & 10.0               & n/a               \\ \hline
 Ren et. al \citep{ren2012rgb}     & n/a                  & \textbf{36.3}               & n/a               \\ \hline
 \end{tabular}
-\caption[SegNet quantitative results on the SUN RGB-D dataset.]{Quantitative comparison on the SUN RGB-D dataset which consists of 5050 test images of indoor scenes with 37 classes. SegNet RGB based predictions have a high global accuracy and also matches the RGB-D based predictions \citep{ren2012rgb} in terms of class average accuracy.}
+\caption[SegNet quantitative results on the SUN RGB-D dataset.]{Quantitative comparison on the SUN RGB-D dataset which consists of 5050 test images of indoor scenes with 37 classes. SegNet RGB-based predictions have a high global accuracy and also match the RGB-D based predictions \citep{ren2012rgb} in terms of class average accuracy.}
 \label{SUNRGBDtest}
 \end{table}
 
@@ -300,7 +305,7 @@ In Table \ref{PascalQuant} we show the class average accuracy for some recent me
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{segnet/PascalQualy2.pdf}
-\caption[Qualitative assessment of SegNet on Pascal VOC12]{Qualitative assessment of SegNet predictions on test samples from Pascal VOC12 \citep{pascal} dataset. SegNet performs competitively (row (b) on several object classes of varying shape and appearance. However, it lacks smoothness particularly on large objects (see row(d)). This can be perhaps be attributed to the smaller empirical size of the receptive field of the feature units in the deepest encoder layer size \citep{zhou2014object}.}
+\caption[Qualitative assessment of SegNet on Pascal VOC12]{Qualitative assessment of SegNet predictions on test samples from the Pascal VOC12 \citep{pascal} dataset. SegNet performs competitively (row (b) on several object classes of varying shape and appearance. However, it lacks smoothness particularly on large objects (see row(d)). This can be perhaps be attributed to the smaller empirical size of the receptive field of the feature units in the deepest encoder layer size \citep{zhou2014object}.}
 \label{PascalQualy}
 \end{figure*}
 
@@ -365,13 +370,13 @@ Dog  & Horse & Motor bike & Person & Potted plant & Sheep & Sofa & Train & TV & 
 The algorithms presented so far in this chapter produce accurate semantic segmentation predictions, however they are unaware of their uncertainty. Understanding what a model does not know is a critical part of many machine learning systems \citep{ghahramani2015probabilistic}.
 
 Quantifying uncertainty in computer vision applications can be largely divided into regression settings such as depth regression, and classification settings such as semantic segmentation.
-Existing approaches to model uncertainty in such settings in computer vision include particle filtering and conditional random fields \citep{blake1993framework, he2004multiscale}. However, many modern applications mandate the use of \textit{deep learning} to achieve state-of-the-art performance \citep{he2016deep}. Unfortunately most deep learning models not able to represent uncertainty.
+Existing approaches to model uncertainty in such settings in computer vision include particle filtering and conditional random fields \citep{blake1993framework, he2004multiscale}. However, many modern applications mandate the use of \textit{deep learning} to achieve state-of-the-art performance \citep{he2016deep}. Unfortunately, most deep learning models are not able to represent uncertainty.
 For example, deep learning typically does not allow for uncertainty representation in regression settings. Deep learning classification models often give normalised score vectors, which do not necessarily capture model uncertainty. For both settings uncertainty can be captured with \textit{Bayesian deep learning} \citep{denker1991transforming, mackay1992practical, neal1995bayesian} approaches --
 which offer a practical framework for understanding uncertainty with deep learning models 
 \citep{gal2016thesis}.
 
 In Bayesian modelling, there are two main types of uncertainty one can model \citep{der2009aleatory}. \textit{Aleatoric} uncertainty captures noise inherent in the observations.
-This could be for example sensor noise or motion noise, resulting in uncertainty which cannot be reduced even if more data were to be collected.
+This could be, for example, sensor noise or motion noise, resulting in uncertainty which cannot be reduced even if more data were to be collected.
 On the other hand, \textit{epistemic} uncertainty accounts for uncertainty in the model parameters -- uncertainty which captures our ignorance about which model generated our collected data. 
 This uncertainty can be explained away given enough data, and is often referred to as \textit{model uncertainty}. Aleatoric uncertainty can further be categorized into \textit{homoscedastic} uncertainty, uncertainty which stays constant for different inputs, and \textit{heteroscedastic} uncertainty. Heteroscedastic uncertainty depends on the inputs to the model, with some inputs potentially having more noisy outputs than others. 
 Heteroscedastic uncertainty is especially important for computer vision applications. For example, for depth regression, highly textured input images with strong vanishing lines are expected to result in confident predictions, whereas an input image of a featureless wall is expected to have very high uncertainty.
@@ -472,11 +477,7 @@ $
 p(\y | \f^\W(\x)) = \softmax(\f^\W(\x))
 $.
 
-BNNs are easy to formulate, but difficult to perform inference in. This is because the marginal probability $p(\Y | \X)$, required to evaluate the posterior,
-\begin{equation}  
-p(\W | \X, \Y) = \frac{p(\Y | \X, \W)p(\W)}{p(\Y | \X)},
-\end{equation}  
-cannot be evaluated analytically. Different approximations exist \citep{graves2011practical, blundell2015weight, hernandez2016black, Gal2016Bayesian}.
+BNNs are easy to formulate, but difficult to perform inference in. This is because the marginal probability $p(\Y | \X)$, required to evaluate the posterior, cannot be evaluated analytically. Different approximations exist \citep{graves2011practical, blundell2015weight, hernandez2016black, Gal2016Bayesian}.
 In these approximate inference techniques, the posterior $p(\W | \X, \Y)$ is fitted with a simple distribution $q_\theta^*(\W)$, parametrised by $\theta$. This replaces the intractable problem of averaging over all weights in the BNN with an optimisation task, where we seek to optimise over the \textit{parameters of the simple distribution} instead of optimising the original neural network's parameters.
 
 Dropout variational inference is a practical approach for approximate inference in large and complex models \citep{Gal2016Bayesian}. 
@@ -484,22 +485,22 @@ This inference is done by training a model with dropout before every weight laye
 More formally, this approach is equivalent to performing approximate variational inference where we find a simple distribution $q_\theta^*(\W)$ in a tractable family which minimises the Kullback-Leibler (KL) divergence to the true model posterior $p(\W | \X, \Y)$. 
 Dropout can be interpreted as a variational Bayesian approximation, where the approximating distribution is a mixture of two Gaussians with small variances and the mean of one of the Gaussians is fixed at zero. 
 %
-The minimisation objective is given by \citep{jordan1999introduction}:
-% \newcommand{\cL}{\mathcal{L}}
-\begin{equation}  
-\cL(\theta, p) = - \frac{1}{N} \sum_{i=1}^N \log p(\y_i | \f^{\Wh_i}(\x_i)) + \frac{1 - p}{2N} ||\theta||^2
-\end{equation}
-with $N$ data points, dropout probability $p$, samples $\Wh_i \sim q_\theta^*(\W)$, and $\theta$ the set of the simple distribution's parameters to be optimised (weight matrices in dropout's case). In regression, for example, the negative log likelihood can be further simplified as
-\begin{equation}
--\log p(\y_i | \f^{\Wh_i}(\x_i)) \propto  \frac{1}{2 \sigma^2}||\y_i - \f^{\Wh_i}(\x_i)||^2 + \frac{1}{2} \log \sigma^2
-\end{equation}
-for a Gaussian likelihood,
-% or 
-% \begin{align*}
-% -\log p(\y_i | \f^{\Wh_i}(\x_i)) \propto \frac{1}{\sigma^2}||\y_i - \f^{\Wh_i}(\x_i)|| + \log \sigma^2 
-% \end{align*}
-% for a Laplace likelihood,
-with $\sigma$ the model's observation noise parameter -- capturing how much noise we have in the outputs.
+%The minimisation objective is given by \citep{jordan1999introduction}:
+%% \newcommand{\cL}{\mathcal{L}}
+%\begin{equation}  
+%\cL(\theta, p) = - \frac{1}{N} \sum_{i=1}^N \log p(\y_i | \f^{\Wh_i}(\x_i)) + \frac{1 - p}{2N} ||\theta||^2
+%\end{equation}
+%with $N$ data points, dropout probability $p$, samples $\Wh_i \sim q_\theta^*(\W)$, and $\theta$ the set of the simple distribution's parameters to be optimised (weight matrices in dropout's case). In regression, for example, the negative log likelihood can be further simplified as
+%\begin{equation}
+%-\log p(\y_i | \f^{\Wh_i}(\x_i)) \propto  \frac{1}{2 \sigma^2}||\y_i - \f^{\Wh_i}(\x_i)||^2 + \frac{1}{2} \log \sigma^2
+%\end{equation}
+%for a Gaussian likelihood,
+%% or 
+%% \begin{align*}
+%% -\log p(\y_i | \f^{\Wh_i}(\x_i)) \propto \frac{1}{\sigma^2}||\y_i - \f^{\Wh_i}(\x_i)|| + \log \sigma^2 
+%% \end{align*}
+%% for a Laplace likelihood,
+%with $\sigma$ the model's observation noise parameter -- capturing how much noise we have in the outputs.
 
 Epistemic uncertainty in the weights can be reduced by observing more data. This uncertainty induces prediction uncertainty by marginalising over the (approximate) weights posterior distribution. For classification this can be approximated using Monte Carlo integration as follows:
 \begin{equation}
@@ -527,10 +528,26 @@ The first term in the predictive variance, $\sigma^2$, corresponds to the amount
 \subsection{Heteroscedastic Aleatoric Uncertainty}
 \label{sect:hetero}
 
-In the above we captured model uncertainty -- uncertainty over the model parameters -- by approximating the distribution $p(\W | \X, \Y)$. To capture aleatoric uncertainty in regression, we would have to tune the observation noise parameter $\sigma$.
+In the previous section we captured model uncertainty -- uncertainty over the model parameters -- by approximating the distribution $p(\W | \X, \Y)$. To capture aleatoric uncertainty in regression, we would have to tune the observation noise parameter $\sigma$.
 
 Homoscedastic regression assumes constant observation noise $\sigma$ for every input point $\x$. Heteroscedastic regression, on the other hand, assumes that observation noise can vary with input $\x$ \citep{nix1994estimating, le2005heteroscedastic}. Heteroscedastic models are useful in cases where parts of the observation space might have higher noise levels than others.
-In non-Bayesian neural networks, this observation noise parameter is often fixed as part of the model's weight decay, and ignored. However, when made data-dependent, it can be learned as a function of the data:
+In non-Bayesian neural networks, this observation noise parameter is often fixed as part of the model's weight decay, and ignored. However, when made data-dependent, it can be learned as a function of the data.
+
+We derive loss functions for both Gaussian and Laplacian priors.
+The probability density function for the Gaussian distribution is given by:
+\begin{equation}
+P(x) = \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}.
+\end{equation}
+We wish our neural network to learn to estimate the distribution function. To construct the optimisation objective we take the negative log likelihood of this distribution,
+\begin{equation}
+-\log p(\y_i | \x_i) \propto \frac{1}{2\sigma^2}||\y_i - \x_i||^2 + \frac{1}{2} \log \sigma^2.
+\end{equation}
+Similarly for the Laplacian distribution,
+\begin{equation}
+-\log p(\y_i | \x_i) \propto \frac{\sqrt{2}}{\sigma}||\y_i - \x_i|| + \log \sigma.
+\end{equation}
+We can see that using a Gaussian prior results in an L2 norm and a Laplacian prior results in an L1 norm to form the residuals. This choice can be informed by the task, often in vision models it is better to use a L1 norm as it is more robust to large, outlying residuals.
+However, for now we consider the loss with a Gaussian distribution. We can formulate a loss to train our deep learning models (with a Gaussian distribution) by:
 \begin{equation}
 \cL_\text{NN}(\theta) = \frac{1}{N} \sum_{i=1}^N \frac{1}{2\sigma(\x_i)^2} ||\y_i - \f(\x_i)||^2 + \frac{1}{2} \log \sigma(\x_i)^2 %+ \lambda ||\theta||^2
 % \cL(\theta, p) = \frac{1}{N} \sum_{i=1}^N \log \frac{1}{\sigma(\x_i)^2}||\y_i - \f^{\Wh_i}(\x_i)||^2 + \log \sigma(\x_i)^2 + \frac{1 - p}{N} ||\theta||^2.
@@ -564,7 +581,7 @@ This induces a minimisation objective given labelled output points $x$:
 \begin{equation}
 \cL_{BNN}(\theta) = \frac{1}{D} \sum_i \frac{1}{2} \hat{\sigma}^{-2}_i ||\y_i-\hat{\y}_i||^2 + \frac{1}{2} \log{\hat{\sigma}_i^2}
 \end{equation}
-where $D$ is the number of output pixels $\y_i$ corresponding to input image $\x$, indexed by i (additionally, the loss includes weight decay which is omitted for brevity). For example, we may set $D=1$ for image-level regression tasks, or $D$ equal to the number of pixels for dense prediction tasks (predicting a unary corresponding to each input image pixel). $\hat{\sigma}^2_i$ is the BNN output for the predicted variance for pixel $i$.
+where $D$ is the number of output pixels $\y_i$ corresponding to input image $\x$, indexed by $i$ (additionally, the loss includes weight decay which is omitted for brevity). For example, we may set $D=1$ for image-level regression tasks, or $D$ equal to the number of pixels for dense prediction tasks (predicting a unary corresponding to each input image pixel). $\hat{\sigma}^2_i$ is the BNN output for the predicted variance for pixel $i$.
 
 This loss consists of two components; the residual regression obtained with a stochastic sample through the model -- making use of the uncertainty over the parameters  -- and an uncertainty regularization term. We do not need `uncertainty labels' to learn uncertainty. Rather, we only need to supervise the learning of the regression task. We learn the variance, $\sigma^2$, implicitly from the loss function. The second regularization term prevents the network from predicting infinite uncertainty (and therefore zero loss) for all data points.
 
@@ -596,7 +613,7 @@ We observe that allowing the network to predict uncertainty, allows it effective
 The model is discouraged from predicting high uncertainty for all points -- in effect ignoring the data -- through the $\log \sigma^2$ term. Large uncertainty increases the contribution of this term, and in turn penalizes the model: The model \textit{can} learn to ignore the data -- but is penalised for that. The model is also discouraged from predicting very low uncertainty for points with high residual error, as low $\sigma^2$ will exaggerate the contribution of the residual and will penalize the model. It is important to stress that this learned attenuation is not an ad-hoc construction, but a consequence of the probabilistic interpretation of the model. 
 
 This learned loss attenuation property of heteroscedastic neural networks in regression is a desirable effect for classification models as well. 
-However, heteroscedastic neural networks in classification are peculiar models because technically any classification task has input-dependent uncertainty. Nevertheless, the ideas above can be extended from regression heteroscedastic networks to classification heteroscedastic networks, which we discuss.
+However, heteroscedastic neural networks in classification are peculiar models because technically any classification task has input-dependent uncertainty. Nevertheless, the ideas above can be extended from regression heteroscedastic networks to classification heteroscedastic networks, which we discuss in the next section.
 
 
 \subsection{Heteroscedastic Uncertainty in Classification Tasks}
@@ -833,9 +850,9 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00083_uncertainty.png}
 }
 \end{center}
+\label{fig:qual_camvid}
    \small{\caption[Bayesian SegNet results on the CamVid dataset.]{\footnotesize\textbf{Bayesian SegNet results on CamVid dataset \citep{brostow2009semantic}.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.
    }}
-\label{fig:qual_camvid}
 
 \begin{center}
 \resizebox{0.85\linewidth}{!}{
@@ -879,8 +896,8 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00856_uncertainty.png}
 }
 \end{center}
-\caption[Bayesian SegNet results on the SUN RGB-D dataset.]{\footnotesize \textbf{Bayesian SegNet results on the SUN RGB-D dataset \citep{song2015sun}.}}
 \label{fig:qual_sun}
+\caption[Bayesian SegNet results on the SUN RGB-D dataset.]{\footnotesize \textbf{Bayesian SegNet results on the SUN RGB-D dataset \citep{song2015sun}.}}
 
 \begin{center}
 \resizebox{0.85\linewidth}{!}{
@@ -914,8 +931,8 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00023_uncertainty.png}
 }
 \end{center}
-\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset \citep{pascal}.}}
 \label{fig:qual_pascal}
+\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset \citep{pascal}.}}
 \end{figure}
 % \begin{figure}[h!]
 % \centering
@@ -1226,21 +1243,30 @@ In summary, the key contributions of this Section are:
 \item demonstrating the importance of loss weighting in multi-task deep learning and how to obtain superior performance compared to equivalent separately trained models.
 \end{enumerate}
 
+
+
 \subsection{Multitask Learning}
 
-We first review related work from the field of multi-task learning. Multi-task learning aims to improve learning efficiency and prediction accuracy for for each task, when compared to training the models separately \citep{thrun1996learning,baxter2000model}. It can be considered an approach to inductive knowledge transfer which improves generalisation by sharing the domain information between complimentary tasks. It does this by using a shared representation to learn multiple tasks -- what is learned from one task can help other tasks be learned better \citep{caruana1998multitask}.
+We first review related work from the field of multi-task learning. Multi-task learning aims to improve learning efficiency and prediction accuracy for each task, when compared to training a separate model for each task \cite{thrun1996learning,baxter2000model}. It can be considered an approach to inductive knowledge transfer which improves generalisation by sharing the domain information between complimentary tasks. It does this by using a shared representation to learn multiple tasks -- what is learned from one task can help learn other tasks \cite{caruana1998multitask}.
 
-Fine-tuning \citep{agrawal2015learning,oquab2014learning} is a basic example of multi-task learning, where we can leverage different learning tasks by considering them as a pre-training step.
-Other models alternate learning between each training task, for example in natural language processing \citep{collobert2008unified}.
-Multi-task learning can also be used in a data streaming setting \citep{thrun1996learning}, or to prevent forgetting previously learned tasks in reinforcement learning \citep{kirkpatrick2017overcoming}. It can also be used to learn unsupervised features from various data sources with an auto-encoder \citep{ngiam2011multimodal}.
+Fine-tuning \cite{agrawal2015learning,oquab2014learning} is a basic example of multi-task learning, where we can leverage different learning tasks by considering them as a pre-training step.
+Other models alternate learning between each training task, for example in natural language processing \cite{collobert2008unified}.
+Multi-task learning can also be used in a data streaming setting \cite{thrun1996learning}, or to prevent forgetting previously learned tasks in reinforcement learning \cite{kirkpatrick2017overcoming}. It can also be used to learn unsupervised features from various data sources with an auto-encoder \cite{ngiam2011multimodal}.
 
-In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \citep{liao2016understand} or classification and detection \citep{sermanet2013overfeat}. MultiNet \citep{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \citep{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \citep{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. Multi-task deep learning has also been used for geometry and regression tasks. \citep{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \citep{kendall2015posenet} is a model which learns camera position and orientation. UberNet \citep{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \citep{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
+In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \cite{liao2016understand} or classification and detection \cite{sermanet2013overfeat}. MultiNet \cite{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \cite{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \cite{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. Multi-task deep learning has also been used for geometry and regression tasks. \cite{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \cite{kendall2015posenet} is a model which learns camera position and orientation. UberNet \cite{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \cite{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
 
 More importantly, all previous methods which learn multiple tasks simultaneously use a na{\"i}ve weighted sum of losses, where the loss weights are uniform, or crudely and manually tuned. In this work we propose a principled way of combining multiple loss functions to simultaneously learn multiple objectives using homoscedastic task uncertainty. We illustrate the importance of appropriately weighting each task in deep learning to achieve good performance and show that our method can learn to balance these weightings optimally.
 
+
+
+
+\afterpage{%
+    \clearpage% Flush earlier floats (otherwise order might not be correct)
+    \begin{landscape}% Landscape page
+    \centering
 \begin{figure*}[t]
 \centering
-\begin{subfigure}[c]{0.5\linewidth}
+\begin{subfigure}[c]{0.4\linewidth}
 \resizebox{\linewidth}{!}{
 \begin{tikzpicture}
 \pgfplotsset{
@@ -1260,7 +1286,7 @@ More importantly, all previous methods which learn multiple tasks simultaneously
 \begin{axis}[
   axis y line*=left,
   axis x line*=top,
-  ymin=40, ymax=47,
+  ymin=45, ymax=62,
   x dir=reverse,
   xlabel=Classification Weight,
   ylabel=IoU Classification ($\%$),
@@ -1268,15 +1294,16 @@ More importantly, all previous methods which learn multiple tasks simultaneously
 ]
 \addplot[mark=x,red,very thick]
   coordinates{
-    (1.0,43.1)
-    (0.975,45.1)
-    (0.95,45.5)
-    (0.9,46.0)
-    (0.85,46.1)
-    (0.8,45.3)
-    (0.7,43.5)
-    (0.5,43.0)
-    (0.1,41.0)
+    (1.0,59.4)
+    (0.975,59.5)
+    (0.95,59.9)
+    (0.9,60.1)
+    (0.85,60.4)
+    (0.8,59.6)
+    (0.7,59.0)
+    (0.5,56.3)
+    (0.2,47.2)
+    (0.1,42.7)
 }; \label{plot_one2}
 \addlegendentry{Classification}
 \end{axis}
@@ -1292,47 +1319,49 @@ More importantly, all previous methods which learn multiple tasks simultaneously
   axis x line*=bottom,
   xlabel=Depth Weight,
   xmin=0, xmax=1,
-  ymin=0.71, ymax=0.77,
+  ymin=0.566, ymax=0.65,
   ylabel=RMS Inverse Depth Error ($m^{-1}$),
   y dir=reverse,
 ]
 \addlegendimage{/pgfplots/refstyle=plot_one2}\addlegendentry{Classification}
 \addplot[mark=*,blue,very thick]
   coordinates{
-    (0.025,0.764)
-    (0.05,0.737)
-    (0.1,0.730)
-    (0.15,0.729)
-    (0.2,0.724)
-    (0.3,0.722)
-    (0.5,0.724)
-    (0.9,0.738)
-    (1.0,0.740)
+    (0.025,0.664)
+    (0.05,0.603)
+    (0.1,0.586)
+    (0.15,0.582)
+    (0.2,0.577)
+    (0.3,0.573)
+    (0.5,0.602)
+    (0.8,0.625)
+    (0.9,0.628)
+    (1.0,0.640)
 }; \label{plot_two2}
 \addlegendentry{Depth Regression}
 \end{axis}
 \end{tikzpicture}}
 \end{subfigure}
 \qquad\qquad
-\begin{subfigure}[c]{0.3\linewidth}
+\begin{subfigure}[c]{0.2\linewidth}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{cc|cc}
     \toprule
 \multicolumn{2}{c|}{Task Weights} & Class & Depth \\
-Class & Depth & IoU {[}$\%${]} & RMS {[}$m^{-1}${]}\\
+Class & Depth & IoU {[}$\%${]} & Err. {[}$px${]}\\
     \midrule
-1.0 & 0.0 & 43.1 & - \\ %
-0.975&0.025& 45.1 & 0.764 \\ % 91k
-0.95& 0.05& 45.5 & 0.737 \\ %
-0.9 & 0.1 & 46.0 & 0.730 \\ % 63k
-0.85& 0.15& 46.1 & 0.729 \\ % 180k
-0.8 & 0.2 & 45.3 & 0.724 \\ %
-0.7 & 0.3 & 43.5 & 0.722 \\ %
-0.5 & 0.5 & 43.0 & 0.724 \\ % 87k
-0.1 & 0.9 & 41.0 & 0.738 \\ %
-0.0 & 1.0 & - & 0.740 \\ %
+1.0 & 0.0 & 59.4 & - \\ %
+0.975&0.025& 59.5 & 0.664 \\ % 
+0.95& 0.05& 59.9 & 0.603 \\ %
+0.9 & 0.1 & 60.1 & 0.586 \\ % 
+0.85& 0.15& 60.4 & 0.582 \\ % 
+0.8 & 0.2 & 59.6  & 0.577 \\ %
+0.7 & 0.3 & 59.0 & 0.573 \\ %
+0.5 & 0.5 & 56.3 & 0.602 \\ % 
+0.2 & 0.8 & 47.2 & 0.625 \\ % 
+0.1 & 0.9 & 42.7 & 0.628 \\ %
+0.0 & 1.0 & - & 0.640 \\ %
     \midrule
-\multicolumn{2}{c|}{\textbf{Learned weights}} & \multirow{3}{*}{\textbf{46.2}} & \multirow{3}{*}{\textbf{0.714}} \\
+\multicolumn{2}{c|}{\textbf{Learned weights}} & \multirow{3}{*}{\textbf{62.7}} & \multirow{3}{*}{\textbf{0.533}} \\
 \multicolumn{2}{c|}{\textbf{with task uncertainty}} && \\
 \multicolumn{2}{c|}{\textbf{(this work, \sct{mt_loss})}} && \\
     \bottomrule
@@ -1344,7 +1373,7 @@ Class & Depth & IoU {[}$\%${]} & RMS {[}$m^{-1}${]}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\noindent\rule{14cm}{0.4pt}
 
-\begin{subfigure}[c]{0.5\linewidth}
+\begin{subfigure}[c]{0.4\linewidth}
 \resizebox{\linewidth}{!}{
 \begin{tikzpicture}
 \pgfplotsset{
@@ -1374,13 +1403,14 @@ Class & Depth & IoU {[}$\%${]} & RMS {[}$m^{-1}${]}\\
 \addplot[mark=x,red,very thick]
   coordinates{
     (1.0,4.61)
-    (0.6,4.50)
+    (0.75,4.52)
     (0.5,4.30)
     (0.4,4.14)
     (0.3,4.04)
     (0.2,3.83)
     (0.1,3.91)
     (0.05,4.27)
+    (0.025,4.31)
 }; \label{plot_one}
 \addlegendentry{Instance Regression}
 \end{axis}
@@ -1396,45 +1426,47 @@ Class & Depth & IoU {[}$\%${]} & RMS {[}$m^{-1}${]}\\
   axis x line*=bottom,
   xlabel=Depth Weight,
   xmin=0, xmax=1,
-  ymin=0.74, ymax=0.9,
+  ymin=0.59, ymax=0.7,
   ylabel=RMS Inverse Depth Error ($m^{-1}$),
   y dir=reverse,
 ]
 \addlegendimage{/pgfplots/refstyle=plot_one}\addlegendentry{Instance Regression}
 \addplot[mark=*,blue,very thick]
   coordinates{
-    (0.4,0.887)
-    (0.5,0.873)
-    (0.6,0.863)
-    (0.7,0.775)
-    (0.8,0.761)
-    (0.9,0.751)
-    (0.95,0.760)
-    (1.0,0.783)
+    (0.25,0.692)
+    (0.5,0.655)
+    (0.6,0.641)
+    (0.7,0.615)
+    (0.8,0.607)
+    (0.9,0.600)
+    (0.95,0.607)
+    (0.975,0.624)
+    (1.0,0.640)
 }; \label{plot_two}
 \addlegendentry{Depth Regression}
 \end{axis}
 \end{tikzpicture}}
 \end{subfigure}
 \qquad\qquad
-\begin{subfigure}[c]{0.3\linewidth}
+\begin{subfigure}[c]{0.2\linewidth}
 \resizebox{\linewidth}{!}{
 \begin{tabular}{cc|cc}
     \toprule
 \multicolumn{2}{c|}{Task Weights} & Instance & Depth \\
-Instance & Depth & RMS {[}px{]} & RMS {[}$m^{-1}${]}\\ 
+Instance & Depth & Err. {[}$px${]} & Err. {[}$px${]}\\ 
     \midrule
-1.0 & 0.0 & 4.61 & - \\ %
-0.6 & 0.4 & 4.50 & 0.887 \\
-0.5 & 0.5 & 4.30 & 0.873 \\
-0.4 & 0.6 & 4.14 & 0.863 \\
-0.3 & 0.7 & 4.04 & 0.775 \\
-0.2 & 0.8 & 3.83 & 0.761 \\
-0.1 & 0.9 & 3.91 & 0.751 \\
-0.05 & 0.95 & 4.27 & 0.760 \\
-0.0 & 1.0 & - & 0.783 \\ %
+1.0 & 0.0 & 4.61 &  \\
+0.75 & 0.25 & 4.52 & 0.692 \\
+0.5 & 0.5 & 4.30 & 0.655 \\
+0.4 & 0.6 & 4.14 & 0.641 \\
+0.3 & 0.7 & 4.04 & 0.615 \\
+0.2 & 0.8 & 3.83 & 0.607 \\
+0.1 & 0.9 & 3.91 & 0.600 \\
+0.05 & 0.95 & 4.27 & 0.607 \\
+0.025 & 0.975 & 4.31 & 0.624 \\
+0.0 & 1.0 &  & 0.640 \\
     \midrule
-\multicolumn{2}{c|}{\textbf{Learned weights}} & \multirow{3}{*}{\textbf{4.06}} & \multirow{3}{*}{\textbf{0.744}} \\
+\multicolumn{2}{c|}{\textbf{Learned weights}} & \multirow{3}{*}{\textbf{3.54}} & \multirow{3}{*}{\textbf{0.539}} \\
 \multicolumn{2}{c|}{\textbf{with task uncertainty}} && \\
 \multicolumn{2}{c|}{\textbf{(this work, \sct{mt_loss})}} && \\
     \bottomrule
@@ -1445,9 +1477,13 @@ Instance & Depth & RMS {[}px{]} & RMS {[}$m^{-1}${]}\\
 (b) Comparing loss weightings when learning \textbf{instance regression and depth regression}
 %\noindent\rule{14cm}{0.4pt}
 
-   \caption[Effect of varying task weights for multitask learning.]{\textbf{Learning multiple tasks improves the model's representation and individual task performance}. These figures and tables illustrate the advantages of multi-task learning for (a) semantic classification and depth regression and (b) instance and depth regression. Performance of the model in individual tasks is seen at both edges of the plot where $w=0$ and $w=1$. For some balance of weightings between each task, we observe improved performance for both tasks. All models were trained with a learning rate of $0.01$ with the respective weightings applied to the losses using the loss function in \eqn{basic_loss}. Results are shown using the Tiny CityScapes validation dataset using a down-sampled resolution of $128\times256$.}
+   \caption[Effect of loss weighting in multi-task learning.]{\textbf{Learning multiple tasks improves the model's representation and individual task performance}. These figures and tables illustrate the advantages of multi-task learning for (a) semantic classification and depth regression and (b) instance and depth regression. Performance of the model in individual tasks is seen at both edges of the plot where $w=0$ and $w=1$. For some balance of weightings between each task, we observe improved performance for both tasks. All models were trained with a learning rate of $0.01$ with the respective weightings applied to the losses using the loss function in \eqn{basic_loss}. Results are shown using the Tiny CityScapes validation dataset using a down-sampled resolution of $128\times256$.}
 \label{fig:scale_factor}
 \end{figure*}
+\end{landscape}
+\clearpage% Flush page
+}
+
 
 \subsection{Multi Task Learning with Homoscedastic Uncertainty}
 \label{sec:multitask}
@@ -1457,22 +1493,22 @@ Multi-task learning concerns the problem of optimising a model with respect to m
 \label{eqn:basic_loss}
 L_{total}= \sum_i w_i L_{i}.
 \end{equation}
-This is the dominant approach used by prior work \citep{teichmann2016multinet,sermanet2013overfeat,liao2016understand,uhrig2016pixel}, for example for dense prediction tasks \citep{kokkinos2016ubernet}, for scene understanding tasks \citep{eigen2015predicting} and for rotation (in quaternions) and translation (in meters) for camera pose \citep{kendall2015posenet}. However, there are a number of issues with this method. Namely, model performance is extremely sensitive to weight selection, $w_i$, as illustrated in \fig{scale_factor}. These weight hyper-parameters are expensive to tune, often taking many days for each trial. Therefore, it is desirable to find a more convenient approach which is able to learn the optimal weights.
+This is the dominant approach used by prior work \cite{teichmann2016multinet,sermanet2013overfeat,liao2016understand,uhrig2016pixel}, for example for dense prediction tasks \cite{kokkinos2016ubernet}, for scene understanding tasks \cite{eigen2015predicting} and for rotation (in quaternions) and translation (in meters) for camera pose \cite{kendall2015posenet}. However, there are a number of issues with this method. Namely, model performance is extremely sensitive to weight selection, $w_i$, as illustrated in \fig{scale_factor}. These weight hyper-parameters are expensive to tune, often taking many days for each trial. Therefore, it is desirable to find a more convenient approach which is able to learn the optimal weights.
 
-More concretely, let us consider a network which learns to predict pixel-wise depth and semantic class from an input image. In \fig{scale_factor} the two boundaries of each plot show models trained on individual tasks, with the curves showing performance for varying weights $w_i$ for each task. We observe that at some optimal weighting, the joint network performs better than separate networks trained on each task individually (performance of the model in individual tasks is seen at both edges of the plot: $w=0$ and $w=1$). At near-by values to the optimal weight the network performs worse on one of the tasks. However, searching for these optimal weightings is expensive and increasingly difficult with large models with numerous tasks. We next show how to learn optimal task weightings using ideas from probabilistic modelling. Additionally, we show a similar result for two regression tasks; instance segmentation and depth regression.
+More concretely, let us consider a network which learns to predict pixel-wise depth and semantic class from an input image. In \fig{scale_factor} the two boundaries of each plot show models trained on individual tasks, with the curves showing performance for varying weights $w_i$ for each task. We observe that at some optimal weighting, the joint network performs better than separate networks trained on each task individually (performance of the model in individual tasks is seen at both edges of the plot: $w=0$ and $w=1$). At near-by values to the optimal weight the network performs worse on one of the tasks. However, searching for these optimal weightings is expensive and increasingly difficult with large models with numerous tasks. \fig{scale_factor} also shows a similar result for two regression tasks; instance segmentation and depth regression. We next show how to learn optimal task weightings using ideas from probabilistic modelling.
 
-\subsection{Homoscedastic uncertainty as task-dependant uncertainty}
+\subsection{Homoscedastic uncertainty as task-dependent uncertainty}
 \label{sec:uncertainty}
 
-In \cref{seg_unc}, we explained that there are two main types of uncertainty one can model \citep{kendall2017uncertainties}.
+In Bayesian modelling, there are two main types of uncertainty one can model \cite{kendall2017uncertainties}.
 \begin{itemize}
-\item \textit{Epistemic uncertainty} is uncertainty in the model, which captures what our model doesn’t know due to lack of training data. It can be explained away with increased training data.
+\item \textit{Epistemic uncertainty} is uncertainty in the model, which captures what our model does not know due to lack of training data. It can be explained away with increased training data.
 \item \textit{Aleatoric uncertainty} captures our uncertainty with respect to information which our data cannot explain. Aleatoric uncertainty can be explained away with the ability to observe all explanatory variables with increasing precision.
 \end{itemize}
-However, we now go one step further than \cref{seg_unc}. Aleatoric uncertainty can again be divided into two sub-categories.
+Aleatoric uncertainty can again be divided into two sub-categories.
 \begin{itemize}
-\item \textit{Data-dependant} or \textit{Heteroscedastic} uncertainty is aleatoric uncertainty which depends on the input data and is predicted as a model output.
-\item \textit{Task-dependant} or \textit{Homoscedastic} uncertainty is  aleatoric uncertainty which is not dependant on the input data. It is not a model output, rather it is a quantity which stays constant for all input data and varies between different tasks. It can therefore be described as task-dependant uncertainty.
+\item \textit{Data-dependent} or \textit{Heteroscedastic} uncertainty is aleatoric uncertainty which depends on the input data and is predicted as a model output.
+\item \textit{Task-dependent} or \textit{Homoscedastic} uncertainty is  aleatoric uncertainty which is not dependent on the input data. It is not a model output, rather it is a quantity which stays constant for all input data and varies between different tasks. It can therefore be described as task-dependent uncertainty.
 \end{itemize}
 In a multi-task setting, we show that the task uncertainty captures the relative confidence between tasks, reflecting the uncertainty inherent to the regression or classification task. It will also depend on the task's representation or unit of measure.  We propose that we can use homoscedastic uncertainty as a basis for weighting losses in a multi-task learning problem.
 
@@ -1505,6 +1541,11 @@ In regression, for example, the log likelihood can be written as
 -\frac{1}{2 \sigma^2}||\y - \f^{\W}(\x)||^2 - \log \sigma
 \end{equation}
 for a Gaussian likelihood (or similarly for a Laplace likelihood)
+% \begin{align*}
+% \log p(\y | \f^{\W}(\x)) \propto 
+% -\frac{1}{\sigma^2}||\y - \f^{\W}(\x)|| - \log \sigma^2 
+% \end{align*}
+% for a Laplace likelihood,
 with $\sigma$ the model's observation noise parameter -- capturing how much noise we have in the outputs. We then maximise the log likelihood with respect to the model parameters $\W$ and observation noise parameter $\sigma$.
 
 Let us now assume that our model output is composed of two vectors $\y_1$ and $\y_2$, each following a Gaussian distribution:
@@ -1521,7 +1562,7 @@ p(\y_1 | \f^\W(\x)) \cdot p(\y_2 | \f^\W(\x)) \\
 This leads to the \textit{minimisation} objective, $\cL(\W, \sigma_1, \sigma_2)$, (our loss) for our multi-output model:
 \begin{equation}
 \begin{split}
-\cL(\W, \sigma_1, \sigma_2) &= 
+ &= 
 - \log p(\y_1, \y_2 | \f^\W(\x)) \\
 &\propto
 \frac{1}{2 \sigma_1^2} ||\y_1 - \f^{\W}(\x)||^2
@@ -1542,16 +1583,42 @@ This construction can be trivially extended to multiple regression outputs. Howe
 \begin{equation}
 p(\y | \f^\W(\x), \sigma) = \softmax( \frac{1}{\sigma^2} \f^\W(\x))
 \end{equation}
-with a positive scalar $\sigma$. The log likelihood for this output can then be written as 
+with a positive scalar $\sigma$. 
+This can be interpreted as a Boltzmann distribution (also called Gibbs distribution) where the input is scaled by $\sigma^2$ (often referred to as \textit{temperature}). This scalar is either fixed or can be learnt, where the parameter's magnitude determines how `uniform' (flat) the discrete distribution is. This relates to its uncertainty, as measured in entropy.
+The log likelihood for this output can then be written as 
 \begin{equation}
-\log p(\y = c | \f^\W(\x), \sigma) = \frac{1}{\sigma^2} f^\W_c(\x) - \log \sum_{c'} \exp \bigg( \frac{1}{\sigma^2} f^\W_{c'}(\x) \bigg)
+\begin{split}
+\log p(\y = c | \f^\W(\x), \sigma) &= \frac{1}{\sigma^2} f^\W_c(\x) \\
+&- \log \sum_{c'} \exp \bigg( \frac{1}{\sigma^2} f^\W_{c'}(\x) \bigg)
+\end{split}
 \end{equation}
-with $f^\W_c(\x)$ the $c$'th element of the vector $\f^\W(\x)$.
+with $f^\W_c(\x)$ the $c$'th element of the vector $\f^\W(\x)$. 
+% We can rewrite this log likelihood in terms of $\cL(\W) = - \log \softmax (\f^\W(\x))$, the cross entropy loss:
+% \begin{align*}
+% \log p(\y = c | \f^\W(\x), \sigma) 
+% &= 
+% - \frac{1}{\sigma^2} \cL(\W)
+% + \frac{1}{\sigma^2} \log \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg)
+% - \log \sum_{c'} \exp \bigg( \frac{1}{\sigma^2} f^\W_{c'}(\x) \bigg)
+% \\
+% % &= 
+% % \frac{1}{\sigma^2} \cL(\W)
+% % + \log \bigg( \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg) \bigg)^{\frac{1}{\sigma^2} }
+% % - \log \sum_{c'} \exp \bigg( \frac{1}{\sigma^2} f^\W_{c'}(\x) \bigg)
+% % \\
+% &= 
+% -\frac{1}{\sigma^2} \cL(\W)
+% - \log \frac{
+% \sum_{c'} \exp \bigg( \frac{1}{\sigma^2} f^\W_{c'}(\x) \bigg)
+% }{
+% \bigg( \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg) \bigg)^{\frac{1}{\sigma^2} }
+% }.
+% \end{align*}
 
-Next, assume that a model's multiple outputs are composed of a continuous output $\y_1$ and a discrete output $\y_2$, modelled with a Gaussian likelihood and a softmax likelihood, respectively. Like before, the joint loss is given as:
+Next, assume that a model's multiple outputs are composed of a continuous output $\y_1$ and a discrete output $\y_2$, modelled with a Gaussian likelihood and a softmax likelihood, respectively. Like before, the joint loss, $\cL(\W, \sigma_1, \sigma_2)$, is given as:
 \begin{equation}
 \begin{aligned}
-\cL(\W, \sigma_1, \sigma_2) &= 
+ &= 
 -\log p(\y_1, \y_2=c | \f^\W(\x)) \\
 &= 
 -\log \N(\y_1; \f^\W(\x), \sigma_1^2) \cdot
@@ -1563,8 +1630,8 @@ Next, assume that a model's multiple outputs are composed of a continuous output
  \\
 &= \frac{1}{2 \sigma_1^2} \cL_1(\W) 
 + \frac{1}{\sigma_2^2} \cL_2(\W)
-+ \log \sigma_1 
-+ \log \frac{
++ \log \sigma_1 \\
+&\quad\quad\quad\quad + \log \frac{
 \sum_{c'} \exp \bigg( \frac{1}{\sigma_2^2} f^\W_{c'}(\x) \bigg)
 }{
 \bigg( \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg) \bigg)^{\frac{1}{\sigma_2^2} }
@@ -1577,314 +1644,561 @@ Next, assume that a model's multiple outputs are composed of a continuous output
 \end{aligned}
 \end{equation}
 where again we write $\cL_1(\W) = ||\y_1 - \f^{\W}(\x)||^2$ for the Euclidean loss of $\y_1$, write $\cL_2(\W) = -\log \softmax (\y_2, \f^\W(\x))$ for the cross entropy loss of $\y_2$ (with $\f^{\W}(\x)$ not scaled), and optimise with respect to $\W$ as well as $\sigma_1$, $\sigma_2$.
-In the last transition we introduced the explicit simplifying assumption $\frac{1}{\sigma_2^2} \sum_{c'} \exp \bigg( \frac{1}{\sigma_2^2} f^\W_{c'}(\x) \bigg) \approx \bigg( \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg) \bigg)^{\frac{1}{\sigma_2^2} }$ which becomes an equality when $\sigma_2^2 \rightarrow 1$. This has the advantage of simplifying the optimisation objective, as well as empirically improving results.
+In the last transition we introduced the explicit simplifying assumption $\frac{1}{\sigma_2} \sum_{c'} \exp \bigg( \frac{1}{\sigma_2^2} f^\W_{c'}(\x) \bigg) \approx \bigg( \sum_{c'} \exp \bigg( f^\W_{c'}(\x) \bigg) \bigg)^{\frac{1}{\sigma_2^2} }$ which becomes an equality when $\sigma_2 \rightarrow 1$. This has the advantage of simplifying the optimisation objective, as well as empirically improving results.
 
-This last objective can be seen as learning the relative weights of the losses for each output. Large scale values $\sigma_2$ will decrease the contribution of $\cL_2(\W)$, whereas small scale $\sigma_2$ will increase its contribution. The scale is regulated by the last term in the equation. The objective is penalised when setting $\sigma_2$ too large (with the last term contributing a constant value $\log C$ -- with $C$ classes -- to the loss). 
+This last objective can be seen as learning the relative weights of the losses for each output. Large scale values $\sigma_2$ will decrease the contribution of $\cL_2(\W)$, whereas small scale $\sigma_2$ will increase its contribution. The scale is regulated by the last term in the equation. The objective is penalised when setting $\sigma_2$ too large. % (with the last term contributing a constant value $\log C$ -- with $C$ classes -- to the loss). 
 
-The multi-task objective with homoscedastic task uncertainty now becomes:
-\begin{equation}
-\cL(\W, \sigma_1, \sigma_2, ..., \sigma_i) = \sum_i \frac{1}{2 \sigma_i^2} \cL_i(\W) + \log \sigma_i
-\label{eqn:loss_ch2}
-\end{equation}
-over all tasks indexed by $i$. Again, we write $\cL_i(\W) = ||\y_i - \f^{\W}(\x)||^2$ for regression losses $\y_i$, and $\cL_i(\W) = -\log \softmax (\y_i, \f^\W(\x))$ for classification losses. This construction can be trivially extended to arbitrary combinations of discrete and continuous variables, allowing us to learn the relative weights of each loss in a principled and well-founded way. This loss is smoothly differentiable, and is well formed such that the task weights will not converge to zero. In contrast, directly learning the weights using a simple linear sum of losses \eqn{basic_loss} would result in weights which quickly converge to zero. In the following sections we introduce our experimental model and present empirical results.
+% However, we observe that scaling the logits in the SoftMax cross entropy loss does not add any additional modelling capacity. This is because the neural network is free to output logits with any arbitrary scale of its choosing from the final affine regression layer. We do not observe any improvement by using this loss, as the network compensates for the homoscedastic uncertainty, such that the net effect of this pre-softmax scaling is zero. This suggests why multi-task learning with a sum of classification losses has been successful in the past \cite{uhrig2016pixel,kokkinos2016ubernet} -- the SoftMax function inherently captures homoscedastic uncertainty.
+
+% What we observe when classification and regression losses are combined, is that the classification loss is under-weighted compared to the best performing weighting found through grid search. The data terms, $x$, in the regularisation term restrict the weighting compared to regression functions. Ideally, we would like to give the model capacity to freely increase the SoftMax cross entropy loss if required. For this reason, we reconsider the SoftMax cross entropy loss as a distance metric. Cross entropy is a divergence, and not strictly a distance because it is not symmetric. However, we approximate it as a distance which allows us to use the regression objective and remove the input, $x$, from the regularisation term. 
+%The multi-task objective with homoscedastic task uncertainty now becomes:
+%\begin{equation}
+%\cL(\W, \sigma_1, \sigma_2, ..., \sigma_i) = \sum_i \frac{1}{2 \sigma_i^2} \cL_i(\W) + \log \sigma_i
+%\label{eqn:loss}
+%\end{equation}
+%over all tasks indexed by $i$. Again, we write $\cL_i(\W) = ||\y_i - \f^{\W}(\x)||^2$ for regression losses $\y_i$, and $\cL_i(\W) = -\log \softmax (\y_i, \f^\W(\x))$ for classification losses. 
+
+This construction can be trivially extended to arbitrary combinations of discrete and continuous loss functions, allowing us to learn the relative weights of each loss in a principled and well-founded way. This loss is smoothly differentiable, and is well formed such that the task weights will not converge to zero. In contrast, directly learning the weights using a simple linear sum of losses \eqn{basic_loss} would result in weights which quickly converge to zero. In the following sections we introduce our experimental model and present empirical results.
+
+In practice, we train the network to predict the log variance, $s := \log \sigma^2$.
+This is because it is more numerically stable than regressing the variance, $\sigma^2$, as the loss avoids any division by zero. The exponential mapping also allows us to regress unconstrained scalar
+values, where $\exp(-s)$ is resolved to the positive domain giving valid values for variance.
+
+%Our final learning objective is,
+%\begin{equation}
+%\cL = 2 \exp(-s_C)  \cL_C 
+%+ \exp(-s_I)  \cL_I
+%+ \exp(-s_D)  \cL_D
+%+ s_C + s_I + s_D,
+%\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Scene Understanding Model}
+\label{sec:arch}
+
+To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \cite{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a corresponding number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}.
+
+The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. Our encoder is based on DeepLabV3 \cite{chen2017rethinking}, which is a state of the art semantic segmentation framework. We use ResNet101 \cite{he2016deep} as the base feature encoder, followed by an Atrous Spatial Pyramid Pooling (ASPP) module \cite{chen2017rethinking} to increase contextual awareness. We apply dilated convolutions in this encoder, such that the resulting feature map is sub-sampled by a factor of 8 compared to the input image dimensions. 
+
+We then split the network into separate decoders (with separate weights) for each task. The purpose of the decoder is to learn a mapping from the shared features to an output. Each decoder consists of a $3\times3$ convolutional layer with output feature size 256, followed by a $1\times1$ layer regressing the task's output. 
+%We use in-place activated batch normalisation \cite{bulo2017place} for all layers in our model. 
+Further architectural details are described in Appendix \ref{apdx:arch}.
+
+\textbf{Semantic Segmentation.}
+We use the cross-entropy loss to learn pixel-wise class probabilities, averaging the loss over the pixels with semantic labels in each mini-batch.
+%$\cL_{class}(\W) = \frac{1}{|N_C|} \sum_{N_C} -\log \softmax (\y_i, \f^\W(\x))$. We average the loss over the pixels with semantic labels in each mini-batch, $N_C$. 
+
+\textbf{Instance Segmentation.}
+An intuitive method for defining which instance a pixel belongs to is an association to the instance's centroid.
+% In a practical setting, it is extremely unlikely two instances share the same centroid. 
+We use a regression approach for instance segmentation \cite{liang2015proposal}. This approach is inspired by \cite{leibe2008robust} which identifies instances using Hough votes from object parts. In this work we extend this idea by using votes from individual pixels using deep learning. We learn an instance vector, $\hat{x}_n$, for each pixel coordinate, $c_n$, which points to the centroid of the pixel's instance, $i_n$, such that $i_n=\hat{x}_n+c_n$. We train this regression with an $L_1$ loss using ground truth labels $x_n$, averaged over all labelled pixels, $N_I$, in a mini-batch: $\cL_{Instance} = \frac{1}{|N_I|} \sum_{N_I} \norm{x_n - \hat{x}_n}_1$.
+
+\fig{instance} details the representation we use for instance segmentation. \fig{instance}(a) shows the input image and a mask of the pixels which are of an instance class (at test time inferred from the predicted semantic segmentation). \fig{instance}(b) and \fig{instance}(c) show the ground truth and predicted instance vectors for both $x$ and $y$ coordinates. We then cluster these votes using OPTICS \cite{ankerst1999optics}, resulting in the predicted instance segmentation output in \fig{instance}(d).
+
+\begin{figure}[t]
+\begin{center}
+\begin{subfigure}[t]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{example_instance/bielefeld_000000_001011_leftImg8bit.png}
+  \caption{Input Image}
+\end{subfigure}
+\begin{subfigure}[t]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{example_instance/bielefeld_000000_001011_semantic_segmentation_rgb.png}
+  \caption{Semantic Segmentation}
+\end{subfigure}
+\begin{subfigure}[t]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{example_instance/bielefeld_000000_001011_instance_prediction.png}
+  \caption{Instance vector regression}
+\end{subfigure}
+\begin{subfigure}[t]{0.48\linewidth}
+  \includegraphics[width=\linewidth]{example_instance/bielefeld_000000_001011_instance_segmentation.png}
+  \caption{Instance Segmentation}
+\end{subfigure}
+\end{center}
+   \caption[Instance centroid regression method.]{\textbf{Instance centroid regression method.} For each pixel, we regress a vector pointing to the instance's centroid. The loss is only computed over pixels which are from instances. We visualise (c) by representing colour as the orientation of the instance vector, and intensity as the magnitude of the vector.}
+\label{fig:instance}
+\end{figure}
+
+One of the most difficult cases for instance segmentation algorithms to handle is when the instance mask is split due to occlusion. \fig{instancemask} shows that our method can handle these situations, by allowing pixels to vote for their instance centroid with geometry. Methods which rely on watershed approaches \cite{bai2016deep}, or instance edge identification approaches fail in these scenarios.
+
+To obtain segmentations for each instance, we now need to estimate the instance centres, $\hat{i}_n$. We propose to consider the estimated instance vectors, $\hat{x}_n$, as votes in a Hough parameter space and use a clustering algorithm to identify these instance centres. OPTICS \cite{ankerst1999optics}, is an efficient density based clustering algorithm. It is able to identify an unknown number of multi-scale clusters with varying density from a given set of samples. We chose OPICS for two reasons. Crucially, it does not assume knowledge of the number of clusters like algorithms such as k-means \cite{macqueen1967some}. Secondly, it does not assume a canonical instance size or density like discretised binning approaches \cite{comaniciu2002mean}. Using OPTICS, we cluster the points $c_n+\hat{x}_n$ into a number of estimated instances, $\hat{i}$. We can then assign each pixel, $p_n$ to the instance closest to its estimated instance vector, $c_n+\hat{x}_n$.
+
+\textbf{Depth Regression.}
+We train with supervised labels using pixel-wise metric inverse depth using a $L_1$ loss function: $\cL_{Depth} = \frac{1}{|N_D|} \sum_{N_D} \norm{d_n-\hat{d_n}}_1$. Our architecture estimates inverse depth, $\hat{d}_n$, because it can represent points at infinite distance (such as sky). We can obtain inverse depth labels, $d_n$, from a RGBD sensor or stereo imagery. Pixels which do not have an inverse depth label are ignored in the loss.
+
+
+\begin{figure}[t]
+\begin{center}
+\begin{subfigure}[t]{0.49\linewidth}
+  \includegraphics[width=\linewidth,trim={350px 120px 0 100px},clip]{example_instance/segnet_19_output_0.jpg}
+  \caption{Input Image}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\linewidth}
+  \includegraphics[width=\linewidth,trim={350px 120px 0 100px},clip]{example_instance/segnet_19_output_3.png}
+  \caption{Instance Segmentation}
+\end{subfigure}
+\end{center}
+   \caption[Instance segmentation with occlusion.]{This example shows two cars which are occluded by trees and lampposts, making the instance segmentation challenging. Our instance segmentation method can handle occlusions effectively. We can correctly handle segmentation masks which are split by occlusion, yet part of the same instance, by incorporating semantics and geometry.}
+\label{fig:instancemask}
+\end{figure}
+
+\subsection{Model Analysis}
+
+\afterpage{%
+    \clearpage% Flush earlier floats (otherwise order might not be correct)
+    \begin{landscape}% Landscape page
+    \centering
+\begin{table*}[t]
+\centering
+%\resizebox{\textwidth}{!}{
+\begin{tabular}{l|ccc|c|c|c}
+    \toprule
+& \multicolumn{3}{c|}{Task Weights} & Segmentation & Instance & Inverse Depth \\
+Loss & Seg. & Inst. & Depth & IoU {[}$\%${]} & Mean Error {[}$px${]} & Mean Error {[}$px${]}\\ 
+    \midrule
+Segmentation only & 1 & 0 & 0 & 59.4\% &-&-\\
+Instance only & 0 & 1 & 0 &-& 4.61 &-\\
+Depth only & 0 & 0 & 1 &-&-& 0.640 \\ 
+    \midrule
+Unweighted sum of losses & 0.333 & 0.333 & 0.333 & 50.1\% & 3.79 & 0.592 \\
+    \midrule
+Approx. optimal weights & 0.89 & 0.01 & 0.1 & 62.8\% & 3.61 & 0.549 \\
+    \midrule
+2 task uncertainty weighting & \checkmark & \checkmark & & 61.0\% & \textbf{3.42} & - \\%done
+2 task uncertainty weighting & \checkmark & & \checkmark & 62.7\% & - & 0.533 \\%done
+2 task uncertainty weighting & & \checkmark & \checkmark & - & 3.54 & 0.539 \\%underway
+    \midrule
+3 task uncertainty weighting & \checkmark & \checkmark & \checkmark & \textbf{63.4\%} & 3.50 & \textbf{0.522} \\ %underway
+    \bottomrule
+\end{tabular}
+\caption[Quantitative results.]{Quantitative improvement when learning semantic segmentation, instance segmentation and depth with our multi-task loss. Experiments were conducted on the Tiny CityScapes dataset (sub-sampled to a resolution of $128\times 256$). Results are shown from the validation set. We observe an improvement in performance when training with our multi-task loss, over both single-task models and weighted losses. Additionally, we observe an improvement when training on all three tasks ($3\times \checkmark$) using our multi-task loss, compared with all pairs of tasks alone (denoted by $2\times \checkmark$). This shows that our loss function can automatically learn a better performing weighting between the tasks than the baselines.}
+\label{tbl:multitasks}
+\end{table*}
+\end{landscape}
+\clearpage% Flush page
+}
+
+We demonstrate the efficacy of our method on CityScapes \cite{Cordts2016Cityscapes}, a large dataset for road scene understanding. It comprises of stereo imagery, from automotive grade stereo cameras with a $22cm$ baseline, labelled with instance and semantic segmentations from 20 classes. Depth images are also provided, labelled using SGM \cite{Hirschmuller2008}, which we treat as pseudo ground truth. Additionally, we assign zero inverse depth to pixels labelled as sky. The dataset was collected from a number of cities in fine weather and consists of 2,975 training and 500 validation images at $2048\times1024$ resolution. 1,525 images are withheld for testing on an online evaluation server.
+
+Further training details, and optimisation hyperparameters, are provided in Appendix \ref{apdx:arch}.
+
+
+\paragraph{Model Architecture Details}
+We base our model on the recently introduced DeepLabV3 \cite{chen2017rethinking} segmentation architecture.
+%We use \cite{wideresnet} as our base feature encoder (pretrained by \cite{bulo2017place}), with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
+We use ResNet101 \cite{he2016deep} as our base feature encoder, with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
+We then append dilated (atrous) convolutional ASPP module \cite{chen2017rethinking}. This module is designed to improve the contextual reasoning of the network. We use an ASPP module comprised of four parallel convolutional layers, with 256 output channels and dilation rates (1, 12, 24, 36), with kernel sizes ($1^2$, $3^2$, $3^2$, $3^2$). Additionally, we also apply global average pooling to the encoded features, and convolve them to 256 dimensions with a $1 \times 1$ kernel. We apply batch normalisation to each of these layers and concatenate the resulting 1280 features together. This produces the shared representation between each task.
+
+We then split the network, to decode this representation to a given task output. For each task, we construct a decoder consisting of two layers. First, we apply a $1 \times 1$ convolution, outputting 256 features, followed by batch normalisation and a non-linear activation. Finally, we convolve this output to the required dimensions for a given task. For classification, this will be equal to the number of semantic classes, otherwise the output will be 1 or 2 channels for depth or instance segmentation respectively. Finally, we apply bilinear upsampling
+to scale the output to the same resolution as the input.
+
+The majority of the model's parameters and depth is in the feature encoding, with very little flexibility in each task decoder. This illustrates the attraction of multitask learning; most of the compute can be shared between each task to learn a better shared representation.
+
+\paragraph{Optimisation.}
+For all experiments, we use an initial learning rate of $2.5\times10^{-3}$ and polynomial learning rate decay $(1-\frac{iter}{max~iter})^{0.9}$. We train using stochastic gradient descent, with Nesterov updates and momentum $0.9$ and weight decay $10^{-4}$. We conduct all experiments in this paper using PyTorch.
+
+For the experiments on the Tiny CityScapes validation dataset (using a down-sampled resolution of $128\times256$) we train over $50,000$ iterations, using $256 \times 256$ crops with batch size of 8 on a single NVIDIA 1080Ti GPU. We apply random horizontal flipping to the data.
+
+For the full-scale CityScapes benchmark experiment, we train over $100,000$ iterations with a batch size of 16. We apply random horizontal flipping (with probability 0.5) and random scaling (selected from 0.7 - 2.0) to the data during training, before making a $512 \times 512$ crop. The training data is sampled uniformly, and is randomly shuffled for each epoch. Training takes five days on a single computer with four NVIDIA 1080Ti GPUs.
+
+\subsection{Model Analysis}
+\label{sec:tasks}
+
+In \tbl{multitasks} we compare individual models to multi-task learning models using a na{\"i}ve weighted loss or the task uncertainty weighting we propose in this paper. To reduce the computational burden, we train each model at a reduced resolution of $128\times256$ pixels, over $50,000$ iterations. When we downsample the data by a factor of four, we also need to scale the disparity labels accordingly. \tbl{multitasks} clearly illustrates the benefit of multi-task learning, which obtains significantly better performing results than individual task models. For example, using our method we improve classification results from $59.4\%$ to $63.4\%$.
+
+We also compare to a number of na{\"i}ve multi-task losses. We compare weighting each task equally and using approximately optimal weights. Using a uniform weighting results in poor performance, in some cases not even improving on the results from the single task model. Obtaining approximately optimal weights is difficult with increasing number of tasks as it requires an expensive grid search over parameters. However, even these weights perform worse compared with our proposed method. \fig{scale_factor} shows that using task uncertainty weights can even perform better compared to optimal weights found through fine-grained grid search. We believe that this is due to two reasons. First, grid search is restricted in accuracy by the resolution of the search. Second, optimising the task weights using a homoscedastic noise term allows for the weights to be dynamic during training. In general, we observe that the uncertainty term decreases during training which improves the optimisation process.
+
+In Appendix \ref{apdx:analysis} we find that our task-uncertainty loss is robust to the initialisation chosen for the parameters. These quickly converge to a similar optima in a few hundred training iterations. We also find the resulting task weightings varies throughout the course of training. For our final model (in \tbl{benchmarks}), at the end of training, the losses are weighted with the ratio 43 : 1 : 0.16 for semantic segmentation, depth regression and instance segmentation, respectively.
+
+Finally, we benchmark our model using the full-size CityScapes dataset. In \tbl{benchmarks} we compare to a number of other state of the art methods in all three tasks. Our method is the first model which completes all three tasks with a single model. We compare favourably with other approaches, outperforming many which use comparable training data and inference tools. \fig{cityscapesqual} shows some qualitative examples of our model.
+
+
 
 \begin{figure*}[t]
 \resizebox{\linewidth}{!}{
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_107_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_186_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_242_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_209_output_0.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026550_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000045_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000021_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000042_000019_leftImg8bit.jpg}
   \caption{Input image}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_107_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_186_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_242_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_209_output_1.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026550_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000045_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000021_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000042_000019_semantic_segmentation_rgb.jpg}
   \caption{Segmentation output}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_107_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_186_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_242_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_209_output_3.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026550_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000045_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000021_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000042_000019_instance_segmentation.jpg}
   \caption{Instance output}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_107_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_186_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_242_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_209_output_4.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026550_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000045_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000021_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000042_000019_depth_prediction.jpg}
   \caption{Depth output}
 \end{center}
 \end{subfigure}}
-	\caption[Qualitative results on the CityScapes dataset.]{\textbf{Qualitative results for multi-task learning of geometry and semantics for road scene understanding}. Results are shown on test images from the CityScapes dataset using our multi-task approach with a single network trained on all tasks. We observe that multi-task learning improves the smoothness and accuracy for depth perception because it learns a representation that uses cues from other tasks, such as segmentation (and vice versa).}
+	\caption[Qualitative results.]{\textbf{Qualitative results for multi-task learning of geometry and semantics for road scene understanding with a single network trained on all tasks}. We observe that multi-task learning improves the smoothness and accuracy for depth perception because it learns a representation that uses cues from other tasks, such as segmentation (and vice versa).}
 	\label{fig:cityscapesqual}
 \end{figure*}
-
-To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \citep{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a corresponding number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}.
-
-The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. Our encoder is based on ResNet-101 \citep{he2016deep} (without the final fully connected layer). We apply this encoder in a convolutional manner over the input image, which results in a $2048$ dimensional shared feature representation. Inspired by the dilated convolutional approach of \citep{chen2016deeplab}, this encoder feature map is sub-sampled by a factor of 8 compared to the input image dimensions.
-
-We then split the network into separate decoders (with separate weights) for each task. The purpose of the decoder is to learn a mapping from the shared features to an output. Each decoder consists of three convolutional layers with kernel size $3\times3$, $1\times1$ and $1\times1$ respectively, and feature size $512$, $512$ and the number of output dimensions respectively.
-
-\textbf{Semantic Segmentation.}
-We use the cross-entropy loss to learn pixel-wise class probabilities, averaging the loss over the pixels with semantic labels in each mini-batch.
-
-\textbf{Instance Segmentation.}
-An intuitive method for defining which instance a pixel belongs to is an association to the instance's centroid.
-We use a regression approach for instance segmentation \citep{liang2015proposal}. This approach is inspired by \citep{leibe2008robust} which identifies instances using Hough votes from object parts. In this work we extend this idea by using votes from individual pixels using deep learning. We learn an instance vector, $\hat{x}_n$, for each pixel coordinate, $c_n$, which points to the centroid of the pixel's instance, $i_n$, such that $i_n=\hat{x}_n+c_n$. We train this regression with an $L_1$ loss using ground truth labels $x_n$, averaged over all labelled pixels, $N_I$, in a mini-batch: $\cL_{Instance} = \frac{1}{|N_I|} \sum_{N_I} \norm{x_n - \hat{x}_n}_1$.
-
-\fig{instance} details the representation we use for instance segmentation. \fig{instance}(a) shows the input image and a mask of the pixels which are of an instance class (at test time inferred from the predicted semantic segmentation). \fig{instance}(b) and \fig{instance}(c) show the ground truth and predicted instance vectors for both $x$ and $y$ coordinates. We then cluster these votes using OPTICS \citep{ankerst1999optics}, resulting in the predicted instance segmentation output in \fig{instance}(d).
-
-\begin{figure}[t]
-\begin{center}
-\begin{subfigure}[t]{0.24\linewidth}
-  \includegraphics[width=\linewidth]{figures/input.png}
-  \includegraphics[width=\linewidth]{figures/mask.png}
-  \caption{Input Image\\and Mask}
-\end{subfigure}
-\begin{subfigure}[t]{0.24\linewidth}
-  \includegraphics[width=\linewidth]{figures/gt_x.png}
-  \includegraphics[width=\linewidth]{figures/gt_y.png}
-  \caption{Instance\\Labels}
-\end{subfigure}
-\begin{subfigure}[t]{0.24\linewidth}
-  \includegraphics[width=\linewidth]{figures/instance_x.png}
-  \includegraphics[width=\linewidth]{figures/instance_y.png}
-  \caption{Model\\Prediction}
-\end{subfigure}
-\begin{subfigure}[t]{0.24\linewidth}
-  \includegraphics[width=\linewidth]{figures/segmentation.png}
-  \includegraphics[width=\linewidth]{figures/instance_segmentation.png}
-  \caption{Segmentation Output}
-\end{subfigure}
-\end{center}
-   \caption[Instance centroid regression example.]{\textbf{Instance centroid regression training data.} For each pixel, we regress a vector pointing to the instance's centroid. The loss is computed with the mask, and $x$ and $y$ instance vectors.}
-\label{fig:instance}
-\end{figure}
-
-One of the most difficult cases for instance segmentation algorithms to handle is when the instance mask is split due to occlusion. \fig{instancemask} shows that our method can handle these situations, by allowing pixels to vote for their instance centroid with geometry. Methods which rely on watershed approaches \citep{bai2016deep}, or instance edge identification approaches fail in these scenarios.
-
-To obtain segmentations for each instance, we now need to estimate the instance centres, $\hat{i}_n$. We propose to consider the estimated instance vectors, $\hat{x}_n$, as votes in a Hough parameter space and use a clustering algorithm to identify these instance centres. OPTICS \citep{ankerst1999optics}, is an efficient density based clustering algorithm. It is able to identify an unknown number of multi-scale clusters with varying density from a given set of samples. We chose OPICS for two reasons. Crucially, it does not assume knowledge of the number of clusters like algorithms such as k-means \citep{macqueen1967some}. Secondly, it does not assume a canonical instance size or density like discretised binning approaches \citep{comaniciu2002mean}. Using OPTICS, we cluster the points $c_n+\hat{x}_n$ into a number of estimated instances, $\hat{i}$. We can then assign each pixel, $p_n$ to the instance closest to its estimated instance vector, $c_n+\hat{x}_n$.
-
-\textbf{Depth Regression.}
-We train with supervised labels using pixel-wise metric inverse depth using a $L_1$ loss function: $\cL_{Depth} = \frac{1}{|N_D|} \sum_{N_D} \norm{d_n-\hat{d_n}}_1$. Our architecture estimates inverse depth, $\hat{d}_n$, because it can represent points at infinite distance (such as sky). We can obtain inverse depth labels, $d_n$, from a RGBD sensor or stereo imagery. Pixels which do not have an inverse depth label are ignored in the loss.
-
-\begin{figure}[t]
-\begin{center}
-\begin{subfigure}[t]{0.49\linewidth}
-  \includegraphics[width=\linewidth,trim={350px 120px 0 100px},clip]{results/segnet_19_output_0.jpg}
-  \caption{Input Image}
-\end{subfigure}
-\begin{subfigure}[t]{0.49\linewidth}
-  \includegraphics[width=\linewidth,trim={350px 120px 0 100px},clip]{results/segnet_19_output_3.png}
-  \caption{Instance Segmentation}
-\end{subfigure}
-\end{center}
-   \caption[Instance segmentation with occlusion.]{This example shows two cars which are occluded by trees and lampposts, making the instance segmentation challenging. Our instance segmentation method can handle occlusions effectively. We can correctly handle segmentation masks which are split by occlusion, yet part of the same instance, By incorporating semantics and geometry.}
-\label{fig:instancemask}
-\end{figure}
-
-\begin{table*}[t]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l|ccc|c|c|c}
-    \toprule
-& \multicolumn{3}{c|}{Task Weights} & Classification & Instance & Inverse Depth \\
-Loss & Cls. & Inst. & Depth & IoU {[}$\%${]} & RMS Error {[}$px${]} & RMS Error {[}$px${]}\\ 
-    \midrule
-Class only & 1 & 0 & 0 & 43.1\% &-&-\\
-Instance only & 0 & 1 & 0 &-& 4.61 &-\\
-Depth only & 0 & 0 & 1 &-&-& 0.783 \\ 
-    \midrule
-Unweighted sum of losses & 0.333 & 0.333 & 0.333 & 43.6\% & 3.92 & 0.786 \\
-% Unweighted sum of losses & 1.0 & 1.0 & 1.0 & 43.0\% & 4.04 & 0.768 \\
-    \midrule
-Approx. optimal weights & 0.8 & 0.05 & 0.15 & 46.3\% & 3.92 & 0.799 \\
-    \midrule
-2 task uncertainty weighting & \checkmark & \checkmark & & 46.5\% & 3.73 & - \\%done
-2 task uncertainty weighting & \checkmark & & \checkmark & 46.2\% & - & 0.714 \\%done
-2 task uncertainty weighting & & \checkmark & \checkmark & - & 4.06 & 0.744 \\%underway
-    \midrule
-3 task uncertainty weighting & \checkmark & \checkmark & \checkmark & \textbf{46.6\%} & \textbf{3.91} & \textbf{0.702} \\ %underway
-    \bottomrule
-\end{tabular}}
-\caption[Quantitative improvement from multitask learning for scene understanding.]{Quantitative improvement when learning semantic segmentation, instance segmentation and depth with our multi-task loss. Experiments were conducted on the Tiny CityScapes dataset, sub-sampled to a resolution of $128\times 256$, results are shown from the validation set. We observe an improvement in performance when training with our multi-task loss, over both single-task models and weighted losses. Additionally, we observe an improvement when training on all three tasks ($3\times \checkmark$) using our multi-task loss, compared with all pairs of tasks alone (denoted by $2\times \checkmark$). This shows that our loss function can automatically learn an better performing weighting between the tasks.}
-\label{tbl:multitasks}
-\end{table*}
 
 
 \afterpage{%
     \clearpage% Flush earlier floats (otherwise order might not be correct)
     \begin{landscape}% Landscape page
-\begin{table}[t]
+    \centering
+\begin{table*}[t]
 	\centering
 	\resizebox{\linewidth}{!}{
 		\begin{tabular}{l|c|c|c|c|c|c|c|c|c|c}
         \toprule
 			& \multicolumn{4}{c|}{Semantic Segmentation} & \multicolumn{4}{c|}{Instance Segmentation} & \multicolumn{2}{c}{Monocular Disparity Estimation} \\
 			Method & IoU class & iIoU class & IoU cat & iIoU cat & AP & AP 50\% & AP 100m & AP 50m & Mean Error {[}$px${]} & RMS Error {[}$px${]} \\ \toprule % & Runtime [s]\\ \hline \hline
-			\multicolumn{11}{c}{\textbf{Classification, instance and depth methods (this work)}}\\ \midrule
-			Multi-Task Learning & 78.5 & 57.4 & 89.9 & 77.7 & 17.7 & 32.3 & 22.4 & 33.7 & 5.55 & 10.36 \\ \midrule%& - \\
-			\multicolumn{11}{c}{\textbf{Classification and instance methods}}\\ \midrule
-			Uhrig et al. \citep{uhrig2016pixel} & 64.3 & 41.6 & 85.9 & 73.9 & 8.9 & 21.1 & 15.3 & 16.7 &-&-\\ \midrule%& - \\ \hline
-			\multicolumn{11}{c}{\textbf{Instance only methods}}\\ \midrule
-			Mask R-CNN \citep{he2017maskrcnn} &-&-&-&-& 26.2 & 49.9 & 37.6 & 40.1 & -& -\\ %& 60.0 \\ \hline
-            Deep Watershed \citep{bai2016deep} &-&-&-&-& 19.4 & 35.3 & 31.4 & 36.8 & -& -\\ %& 60.0 \\ \hline
-            R-CNN + MCG \citep{Cordts2016Cityscapes} &-&-&-&-& 4.6 & 12.9 & 7.7 & 10.3 & -& -\\ \midrule %& 60.0 \\ \hline
-			\multicolumn{11}{c}{\textbf{Classification only methods}}\\ \midrule
-			chen2016deeplab V3 \citep{chen2017rethinking} & 81.3 & 60.9 & 91.6 & 81.7 &-&-&-&-&-&-\\%& 
-			PSPNet \citep{zhao2017pspnet} & 81.2 & 59.6 & 91.2 & 79.2 &-&-&-&-&-&-\\%& 
-			%LRR-4x \citep{ghiasi2016laplacian} & 71.8 & 47.9 & 88.4 & 73.9 &-&-&-&-&-&-\\%& 
-			Adelaide \citep{lin2015efficient} & 71.6 & 51.7 & 87.3 & 74.1 &-&-&-&-&-&-\\%& 4.0\\
-			chen2016deeplab \citep{chen2016deeplab} & 70.4 & 42.6 & 86.4 & 67.7 &-&-&-&-&-&-\\%& 4.0\\
-			Dilation \citep{YuKoltun2016} & 67.1 & 42.0 & 86.5 & 71.1 &-&-&-&-&-&-\\%& 4.0 \\
-			FCN 8s \citep{long2015fully} & 65.3 & 41.7 & 85.7 & 70.1 &-&-&-&-&-&-\\%& 0.5 \\
-			SegNet \citep{badrinarayanan2017segnet} & 57.0 & 32.0 & 79.1 & 61.9 &-&-&-&-&-&-\\%& 0.06 \\
+			\multicolumn{11}{c}{\textbf{Semantic segmentation, instance segmentation and depth regression methods (this work)}}\\ \midrule
+			Multi-Task Learning & 78.5 & 57.4 & 89.9 & 77.7 & 21.6 & 39.0 & 35.0 & 37.0 & 2.92 & 5.88 \\ \midrule%& - \\
+			\multicolumn{11}{c}{\textbf{Semantic segmentation and instance segmentation methods}}\\ \midrule
+			Uhrig et al. \cite{uhrig2016pixel} & 64.3 & 41.6 & 85.9 & 73.9 & 8.9 & 21.1 & 15.3 & 16.7 &-&-\\ \midrule%& - \\ \hline
+			\multicolumn{11}{c}{\textbf{Instance segmentation only methods}}\\ \midrule
+			Mask R-CNN \cite{he2017maskrcnn} &-&-&-&-& 26.2 & 49.9 & 37.6 & 40.1 & -& -\\ %& 60.0 \\ \hline
+            Deep Watershed \cite{bai2016deep} &-&-&-&-& 19.4 & 35.3 & 31.4 & 36.8 & -& -\\ %& 60.0 \\ \hline
+            R-CNN + MCG \cite{Cordts2016Cityscapes} &-&-&-&-& 4.6 & 12.9 & 7.7 & 10.3 & -& -\\ \midrule %& 60.0 \\ \hline
+			\multicolumn{11}{c}{\textbf{Semantic segmentation only methods}}\\ \midrule
+			DeepLab V3 \cite{chen2017rethinking} & 81.3 & 60.9 & 91.6 & 81.7 &-&-&-&-&-&-\\%& 
+			PSPNet \cite{zhao2017pspnet} & 81.2 & 59.6 & 91.2 & 79.2 &-&-&-&-&-&-\\%& 
+			%LRR-4x \cite{ghiasi2016laplacian} & 71.8 & 47.9 & 88.4 & 73.9 &-&-&-&-&-&-\\%& 
+			Adelaide \cite{lin2015efficient} & 71.6 & 51.7 & 87.3 & 74.1 &-&-&-&-&-&-\\%& 4.0\\
+			%DeepLab \cite{chen2016deeplab} & 70.4 & 42.6 & 86.4 & 67.7 &-&-&-&-&-&-\\%& 4.0\\
+			%Dilation \cite{YuKoltun2016} & 67.1 & 42.0 & 86.5 & 71.1 &-&-&-&-&-&-\\%& 4.0 \\
+			%FCN 8s \cite{long2014fully} & 65.3 & 41.7 & 85.7 & 70.1 &-&-&-&-&-&-\\%& 0.5 \\
+			%SegNet \cite{badrinarayanan2017segnet} & 57.0 & 32.0 & 79.1 & 61.9 &-&-&-&-&-&-\\%& 0.06 \\
             \bottomrule
 		\end{tabular}}
-	\caption[Quantitative results of our multitask scene understanding model.]{\textbf{CityScapes Benchmark \citep{Cordts2016Cityscapes}.} We show results from the validation dataset using the full resolution of $1024\times2048$ For the full leaderboard, please see \url{www.cityscapes-dataset.com/benchmarks}. The disparity (inverse depth) metrics were computed against the CityScapes depth maps, which are sparse and computed using SGM stereo \citep{hirschmuller2005accurate}. Note, these comparisons are not entirely fair, as many methods use ensembles of different training datasets.}
+	\caption[CityScapes Benchmark.]{\textbf{CityScapes Benchmark \cite{Cordts2016Cityscapes}.} We show results from the test dataset using the full resolution of $1024\times2048$ pixels. For the full leaderboard, please see \url{www.cityscapes-dataset.com/benchmarks}. The disparity (inverse depth) metrics were computed against the CityScapes depth maps, which are sparse and computed using SGM stereo \cite{hirschmuller2005accurate}. Note, these comparisons are not entirely fair, as many methods use ensembles of different training datasets. Our method is the first to address all three tasks with a single model.}
 	\label{tbl:benchmarks}
-\end{table}
-\end{landscape}}
+\end{table*}
+\end{landscape}
+\clearpage% Flush page
+}
+
+We have shown that correctly weighting loss terms is of paramount importance for multi-task learning problems. We demonstrated that homoscedastic (task) uncertainty is an effective way to weight losses. We derived a principled loss function which can learn a relative weighting automatically from the data and is robust to the weight initialization. We showed that this can improve performance for scene understanding tasks with a unified architecture for semantic segmentation, instance segmentation and per-pixel depth regression. We demonstrated modelling task-dependent homoscedastic uncertainty improves the model's representation and each task's performance when compared to separate models trained on each task individually.
+
+There are many interesting questions left unanswered. Firstly, our results show that there is usually not a single optimal weighting for all tasks. Therefore, what is the optimal weighting? Is multitask learning an ill-posed optimisation problem without a single higher-level goal?
+
+A second interesting question is where the optimal location is for splitting the shared encoder network into separate decoders for each task? And, what network depth is best for the shared multi-task representation?
+
+Finally, why do the semantics and depth tasks out-perform the semantics and instance tasks results in \tbl{multitasks}? Clearly the three tasks explored in this paper are complimentary and useful for learning a rich representation about the scene. It would be beneficial to be able to quantify the relationship between tasks and how useful they would be for multitask representation learning. \citep{zamir2018taskonomy} is some excellent initial work towards this goal.
 
 
-\subsection{Model Evaluation}
-\label{sec:tasks}
 
-We demonstrate the efficacy of our method on CityScapes \citep{Cordts2016Cityscapes}, a large dataset for road scene understanding. It comprises of stereo imagery, from automotive grade stereo cameras with a $22cm$ baseline, labelled with instance and semantic segmentations from 20 classes. Depth images are also provided, labelled using SGM \citep{Hirschmuller2008}, which we treat as ground truth to train our monocular depth regression algorithm. Additionally, we assign zero inverse depth to pixels labelled as sky. The dataset was collected from a number of cities in fine weather and consists of 3,250 training and 750 validation images at $2048\times1024$ resolution. 1,000 images are used for testing on an online evaluation server. 
+This task uncertainty loss is also robust to the value we use to initialise the task uncertainty values.
+One of the attractive properties of our approach to weighting multi-task losses is that it is robust to the initialisation choice for the homoscedastic noise parameters. \fig{convergence} shows that for an array of initial choices of $\log \sigma^2$ from $-2.0$ to $5.0$ the homoscedastic noise and task loss is able to converge to the same minima. Additionally, the homoscedastic noise terms converges after only $~100$ iterations, while the network requires $30,000+$ iterations to train. Therefore our model is robust to the choice of initial value for the weighting terms.
 
-In \tbl{multitasks} we compare individual models to multi-task learning models using a na{\"i}ve weighted loss or the task uncertainty weighting we propose in this Section. To reduce the computational burden, we train each model at a reduced resolution of $128\times256$ pixels. This clearly illustrates the benefit of multi-task learning, which obtains significantly better performing results than individual task models. For example, using our method we improve classification results from $43.1\%$ to $46.6\%$.
+\fig{taskunc} shows losses and uncertainty estimates for each task during training of the final model on the full-size CityScapes dataset. At a point 500 iterations into training, the model estimates task variance of 0.60, 62.5 and 13.5 for semantic segmentation, instance segmentation and depth regression, respectively. Becuase the losses are weighted by the inverse of the uncertainty estimates, this results in a task weighting ratio of approximately 23 : 0.22 : 1 between semantics, instance and depth, respectively. At the conclusion of training, the three tasks have uncertainty estimates of 0.075, 3.25 and 20.4, which results in effective weighting between the tasks of 43: 0.16 : 1. This shows how the task uncertainty estimates evolve over time, and the approximate final weightings the network learns. We observe they are far from uniform, as is often assumed in previous literature.
 
-We also compare to a number of na{\"i}ve multi-task losses. We compare weighting each task equally and using approximately optimal weights. Using a uniform weighting results in poor performance, in some cases not even improving on the results from the single task model. Obtaining approximately optimal weights is difficult with increasing number of tasks as it requires an expensive grid search over parameters. However, even these weights perform worse compared with our proposed method. \fig{scale_factor} shows that using task uncertainty weights can even perform better compared to optimal weights found through fine-grained grid search. We believe that this is due to two reasons. First, grid search is restricted in accuracy by the resolution of the search. Second, optimising the task weights using a homoscedastic noise term allows for the weights to be dynamic during training. In general, we observe that the uncertainty term decreases during training which improves the optimisation process. 
+Interestingly, we observe that this loss allows the network to dynamically tune the weighting. Typically, the homoscedastic noise terms decrease in magnitude as training progresses. This makes sense, as during training the model becomes more effective at a task. Therefore the error, and uncertainty, will decrease. This has a side-effect of increasing the effective learning rate -- because the overall uncertainty decreases, the weight for each task's loss increases. In our experiments we compensate for this by annealing the learning rate with a power law.
+
+Finally, a comment on the model's failure modes. The model exhibits similar failure modes to state-of-the-art single-task models. For example, failure with objects out of the training distribution, occlusion or visually challenging situations. However, we also observe our multi-task model tends to fail with similar effect in all three modalities. Ie. an erroneous pixel's prediction in one task will often be highly correlated with error in another modality. Some examples can be seen in \fig{cityscapesquallarge}.
+
+\begin{figure*}[t]
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  %\includegraphics[width=0.32\linewidth]{plots/class_loss.eps}
+  %\includegraphics[width=0.32\linewidth]{plots/class_weight.eps}
+  \includegraphics[width=\linewidth]{plots/class_weight_zoom-eps-converted-to.pdf}
+  \caption{Semantic segmentation task}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+ % \includegraphics[width=0.32\linewidth]{plots/instance_loss.eps}
+  %\includegraphics[width=0.32\linewidth]{plots/instance_weight.eps}
+  \includegraphics[width=\linewidth]{plots/instance_weight_zoom-eps-converted-to.pdf}
+  \caption{Instance segmentation task}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+ % \includegraphics[width=0.32\linewidth]{plots/depth_loss.eps}
+  %\includegraphics[width=0.32\linewidth]{plots/depth_weight.eps}
+  \includegraphics[width=\linewidth]{plots/depth_weight_zoom-eps-converted-to.pdf}
+  \caption{Depth regression task}
+\end{center}
+\end{subfigure}
+   \caption[Convergence of homoscedastic noise and task losses.]{\textbf{Training plots showing convergence of homoscedastic noise and task loss} for an array of initialisation choices for the homoscedastic uncertainty terms for all three tasks. Each plot shows the the homoscedastic noise value optimises to the same solution from a variety of initialisations. Despite the network taking $10,000+$ iterations for the training loss to converge, the task uncertainty converges very rapidly after only $~100$ iterations.}
+\label{fig:convergence}
+\end{figure*}
+
+\begin{figure*}[t]
+\begin{center}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/segmentation_loss-eps-converted-to.pdf}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/instance_loss-eps-converted-to.pdf}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/depth_loss-eps-converted-to.pdf}
+\end{center}
+\end{subfigure}
 
 
-\begin{figure*}[p]
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/segmentation_var-eps-converted-to.pdf}
+  \caption{Semantic segmentation task}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/instance_var-eps-converted-to.pdf}
+  \caption{Instance segmentation task}
+\end{center}
+\end{subfigure}
+\begin{subfigure}[t]{0.32\linewidth}
+\begin{center}
+  \includegraphics[width=\linewidth]{plots2/depth_var-eps-converted-to.pdf}
+  \caption{Depth regression task}
+\end{center}
+\end{subfigure}
+\end{center}
+   \caption[Learning task uncertainty.]{\textbf{Learning task uncertainty.} These training plots show the losses and task uncertainty estimates for each task during training. Results are shown for the final model, trained on the fullsize CityScapes dataset.}
+\label{fig:taskunc}
+\end{figure*}
+
+
+\afterpage{%
+    \clearpage
+\begin{figure*}[t]
 \makebox[\textwidth][c]{
 \resizebox{\linewidth}{!}{
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_18_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_20_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_43_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_204_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_149_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_128_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_114_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_86_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_51_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_45_output_0.jpg}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_19_output_0.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026296_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000008_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000010_000019_leftImg8bit.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000024_000019_leftImg8bit.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000033_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000036_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000046_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000049_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_018102_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_027586_leftImg8bit.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000044_000019_leftImg8bit.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/leverkusen_000020_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000026_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000306_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000316_000019_leftImg8bit.jpg}
   \caption{Input image}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_18_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_20_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_43_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_204_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_149_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_128_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_114_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_86_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_51_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_45_output_1.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_19_output_1.png}
-  \caption{Segmentation output}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026296_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000008_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000010_000019_semantic_segmentation_rgb.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000024_000019_semantic_segmentation_rgb.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000033_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000036_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000046_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000049_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_018102_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_027586_semantic_segmentation_rgb.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000044_000019_semantic_segmentation_rgb.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/leverkusen_000020_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000026_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000306_000019_semantic_segmentation_rgb.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000316_000019_semantic_segmentation_rgb.jpg}
+  \caption{Semantic segmentation}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_18_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_20_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_43_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_204_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_149_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_128_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_114_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_86_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_51_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_45_output_3.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_19_output_3.png}
-  \caption{Instance output}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026296_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000008_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000010_000019_instance_segmentation.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000024_000019_instance_segmentation.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000033_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000036_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000046_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000049_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_018102_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_027586_instance_segmentation.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000044_000019_instance_segmentation.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/leverkusen_000020_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000026_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000306_000019_instance_segmentation.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000316_000019_instance_segmentation.jpg}
+  \caption{Instance segmentation}
 \end{center}
 \end{subfigure}
 \begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_18_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_20_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_43_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_204_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_149_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_128_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_114_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_86_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_51_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_45_output_4.png}
-		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{results/segnet_19_output_4.png}
-  \caption{Depth output}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_026296_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000008_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000010_000019_depth_prediction.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000024_000019_depth_prediction.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000033_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000036_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000046_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/berlin_000049_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_018102_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bielefeld_000000_027586_depth_prediction.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/bonn_000044_000019_depth_prediction.jpg}
+%		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/leverkusen_000020_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000026_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000306_000019_depth_prediction.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{qualitative/munich_000316_000019_depth_prediction.jpg}
+  \caption{Depth regression}
 \end{center}
 \end{subfigure}}}
-	\caption[Further qualitative results on the CityScapes dataset.]{\textbf{More qualitative results of our scene understanding model on test images from the CityScapes dataset.}}
+	\caption[Qualitative results.]{\textbf{More qualitative results on test images from the CityScapes dataset.}}
 	\label{fig:cityscapesquallarge}
 \end{figure*}
+\clearpage% Flush page
+}
 
-\begin{figure}[p]
-\begin{subfigure}[t]{\linewidth}
+
+\afterpage{%
+    \clearpage
+\begin{figure*}[t]
+\makebox[\textwidth][c]{
+\resizebox{\linewidth}{!}{
+\begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-  \includegraphics[width=0.32\linewidth]{plots/class_loss.eps}
-  \includegraphics[width=0.32\linewidth]{plots/class_weight.eps}
-  \includegraphics[width=0.32\linewidth]{plots/class_weight_zoom.eps}
-  \caption{Semantic classification task}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_021625_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_025748_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_044366_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000001_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000040_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_031026_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000003_014457_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000252_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000158_000019_leftImg8bit.jpg}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000348_000019_leftImg8bit.jpg}
+  \caption{Input image}
 \end{center}
 \end{subfigure}
-\begin{subfigure}[t]{\linewidth}
+\begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-  \includegraphics[width=0.32\linewidth]{plots/instance_loss.eps}
-  \includegraphics[width=0.32\linewidth]{plots/instance_weight.eps}
-  \includegraphics[width=0.32\linewidth]{plots/instance_weight_zoom.eps}
-  \caption{Instance regression task}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_021625_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_025748_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_044366_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000001_000019_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000040_000019_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_031026_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000003_014457_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000252_000019_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000158_000019_semantic_segmentation_rgb.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000348_000019_semantic_segmentation_rgb.png}
+  \caption{Semantic segmentation}
 \end{center}
 \end{subfigure}
-\begin{subfigure}[t]{\linewidth}
+\begin{subfigure}[t]{0.24\linewidth}
 \begin{center}
-  \includegraphics[width=0.32\linewidth]{plots/depth_loss.eps}
-  \includegraphics[width=0.32\linewidth]{plots/depth_weight.eps}
-  \includegraphics[width=0.32\linewidth]{plots/depth_weight_zoom.eps}
-  \caption{Depth regression task}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_021625_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_025748_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_044366_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000001_000019_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000040_000019_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_031026_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000003_014457_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000252_000019_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000158_000019_instance_segmentation.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000348_000019_instance_segmentation.png}
+  \caption{Instance segmentation}
 \end{center}
 \end{subfigure}
-   \caption[Convergence of task weights during training.]{\textbf{Training plots showing convergence of homoscedastic noise and task loss} for an array of initialisation choices for the homoscedastic uncertainty terms for all three tasks. The left plot shows that the loss converges to the same minimum from varying initialisation choices. The centre plot shows the the homoscedastic noise value optimises to the same solution from a variety of initialisations. The plots on the right show a zoomed in view of the homoscedastic noise plot, showing the initialisation and convergence over a few hundred training iterations. Despite the network taking $10,000+$ iterations for the training loss to converge, the task uncertainty converges very rapidly after only $~100$ iterations.}
-\label{fig:convergence}
-\end{figure}
+\begin{subfigure}[t]{0.24\linewidth}
+\begin{center}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_021625_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/bielefeld_000000_025748_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_044366_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000001_000019_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/berlin_000040_000019_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000001_031026_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/mainz_000003_014457_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000252_000019_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000158_000019_depth_prediction.png}
+		\includegraphics[width=\linewidth,trim={0px 60px 0 0px},clip]{failure/munich_000348_000019_depth_prediction.png}
+  \caption{Depth regression}
+\end{center}
+\end{subfigure}}}
+	\caption[Failure examples.]{\textbf{Example where our model fails on the CityScapes test data.} The first two rows show examples of challenging visual effects such as reflection, which confuse the model. Rows three and four show the model incorrectly distinguishing between road and footpath. This is a common mistake, which we believe is due to a lack of contextual reasoning. Rows five, six and seven demonstrate incorrect classification of a rare class (bus, fence and motorbike, respectively). Finally, the last two rows show failure due to occlusion and where the object is too big for the model's receptive field. Additionally, we observe that failures are highly correlated between the modes, which makes sense as each output is conditioned on the same feature vector. For example, in the second row, the incorrect labelling of the reflection as a person causes the depth estimation to predict human geometry.}
+	\label{fig:fail}
+\end{figure*}
+\clearpage% Flush page
+}
 
 
-\subsection{Benchmarking}
-
-In \cref{tbl:benchmarks} we benchmark our approach on the full-size $1024 \times 2048$ pixel CityScapes dataset \citep{Cordts2016Cityscapes}. This is a challenging benchmark and we compare to various other state-of-the-art methods for semantic segmentation, instance segmentation and depth prediction. Our approach is the first to perform all three tasks jointly. Although we do not outperform the best semantic segmentation methods, a lot of the techniques proposed by these algorithms are complimentary to ours.
-
-\subsection{Analysis}
-
-This loss is also robust to the value we use to initialise the weights.
-One of the attractive properties of our approach to weighting multi-task losses is that it is robust to the initialisation choice for the homoscedastic noise parameters. \fig{convergence} shows that for an array of initial choices of $\log \sigma^2$ from $-2.0$ to $5.0$ the homoscedastic noise and task loss is able to converge to the same minima. Additionally, the homoscedastic noise terms converges after only $~100$ iterations, while the network requires $30,000+$ iterations to train. Therefore our model is robust to the choice of initial value for the weighting terms.
-Interestingly, we observe that this loss allows the network to dynamically tune the weighting. Typically, the homoscedastic noise terms decrease in magnitude as training progresses.
 
 
-An interesting question left unanswered is where the optimal location is for splitting the shared encoder network into separate decoders for each task? And, what network depth is best for the shared multi-task representation?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Summary}
 

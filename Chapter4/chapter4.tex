@@ -507,7 +507,7 @@ The GC-Net model is designed to output disparity estimates, $\hat{d}$, by formin
 
 In the following section we explain the loss function we use to learn to estimate disparity and heteroscedastic uncertainty. We fix a Gaussian likelihood to model our heteroscedastic uncertainty. This induces a minimization objective \citep{nix1994estimating} given labelled output points, $d$:
 \begin{equation}
-\mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i||\hat{\sigma}^{-2}_i + \log{\hat{\sigma}^2_i}
+\mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i||\hat{\sigma}^{-2}_i + \frac{1}{2}\log{\hat{\sigma}^2_i}
 \label{eqn:bayes_loss}
 \end{equation}
 where $N$ is the number of output pixels $\hat{d}_i$ corresponding to input image $I$, indexed by $i$. $\hat{\sigma}^2$ is the probabilistic neural network output for the predicted variance.
@@ -516,7 +516,7 @@ This loss consists of two components; the residual regression and an uncertainty
 
 In practice, we train the network to predict the log variance, $\hat{s}_i := \log \hat{\sigma}_i^2$: 
 \begin{equation}
-\mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i|| \exp (-\hat{s}_i) + \hat{s}_i.
+\mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i|| \exp (-\hat{s}_i) + \frac{1}{2}\hat{s}_i.
 \label{eqn:aleatoric_regression_loss2}
 \end{equation}
 This is because it is more numerically stable than regressing the variance, $\hat{\sigma}^2$, as the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-\hat{s}_i)$ is resolved to the positive domain giving valid values for variance.
@@ -571,7 +571,7 @@ Learning heteroscedastic uncertainty allows us to achieve this. We can interpret
 
 We can apply the heteroscedastic regression loss in \eqn{bayes_loss} to the photometric reprojection error loss in \eqn{aleatoric_regression_loss2} as follows:
 \begin{multline}
-\mathcal{L}_{heteroscedastic~unsupervised} = \frac{1}{2N} \sum_{u,v} \left\lVert I_L(u,v) - I_R(u-\hat{d}_{u,v},v) \right\rVert_1 \exp (-\hat{s}_{u,v}) + \hat{s}_{u,v}
+\mathcal{L}_{heteroscedastic~unsupervised} = \frac{1}{2N} \sum_{u,v} \left\lVert I_L(u,v) - I_R(u-\hat{d}_{u,v},v) \right\rVert_1 \exp (-\hat{s}_{u,v}) + \frac{1}{2}\hat{s}_{u,v}
 \label{eqn:aleatoric_unsupervised_loss}
 \end{multline}
 
