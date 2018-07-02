@@ -677,7 +677,7 @@ We model the benefit of combining both epistemic uncertainty as well as aleatori
 
 To demonstrate our method for semantic segmentation, we use two datasets, CamVid \citep{brostow2009semantic} and NYU v2 \citep{silberman2012indoor}. CamVid is a road scene understanding dataset with 367 training images and 233 test images, of day and dusk scenes, with $11$ classes. We resize images to $360\times480$ pixels for training and evaluation. In Table \ref{camvid} we present results for our architecture. Our method sets a new state-of-the-art on this dataset with mean intersection over union (IoU) score of $67.5\%$. We observe that modelling both aleatoric and epistemic uncertainty improves over the baseline result.  The implicit attenuation obtained from the aleatoric loss provides a larger improvement than the epistemic uncertainty model. However, the combination of both uncertainties improves performance even further. This shows that for this application it is more important to model aleatoric uncertainty, suggesting that epistemic uncertainty can be mostly explained away in this large data setting.
 
-Secondly, NYUv2 \citep{silberman2012indoor} is a challenging indoor segmentation dataset with 40 different semantic classes. It has 1449 images with resolution $640\times480$ from 464 different indoor scenes. Table \ref{nyuv2} shows our results. This dataset is much harder than CamVid because there is significantly less structure in indoor scenes compared to street scenes, and because of the increased number of semantic classes. We use DeepLabLargeFOV \citep{chen2016deeplab} as our baseline model. We improve baseline performance by giving the model flexibility to estimate uncertainty and attenuate the loss. The effect is more pronounced, perhaps because the dataset is more difficult. Additional qualitative results are given in \cref{fig:qual_camvid}, \cref{fig:qual_sun} and \cref{fig:qual_pascal}.
+Secondly, NYUv2 \citep{silberman2012indoor} is a challenging indoor segmentation dataset with 40 different semantic classes. It has 1449 images with resolution $640\times480$ from 464 different indoor scenes. Table \ref{nyuv2} shows our results. This dataset is much harder than CamVid because there is significantly less structure in indoor scenes compared to street scenes, and because of the increased number of semantic classes. We use DeepLabLargeFOV \citep{chen2016deeplab} as our baseline model. We improve baseline performance by giving the model flexibility to estimate uncertainty and attenuate the loss. The effect is more pronounced, perhaps because the dataset is more difficult. Additional qualitative results are given in \cref{fig:qual_camvid2}, \cref{fig:qual_sun} and \cref{fig:qual_pascal}.
 
 
 
@@ -850,9 +850,9 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00083_uncertainty.png}
 }
 \end{center}
-\label{fig:qual_camvid}
-   \small{\caption[Bayesian SegNet results on the CamVid dataset.]{\footnotesize\textbf{Bayesian SegNet results on CamVid dataset \citep{brostow2009semantic}.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.
-   }}
+\caption[Bayesian SegNet results on the CamVid dataset.]{\footnotesize\textbf{Bayesian SegNet results on CamVid dataset \citep{brostow2009semantic}.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.
+   }
+\label{fig:qual_camvid2}
 
 \begin{center}
 \resizebox{0.85\linewidth}{!}{
@@ -896,8 +896,8 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00856_uncertainty.png}
 }
 \end{center}
-\label{fig:qual_sun}
 \caption[Bayesian SegNet results on the SUN RGB-D dataset.]{\footnotesize \textbf{Bayesian SegNet results on the SUN RGB-D dataset \citep{song2015sun}.}}
+\label{fig:qual_sun}
 
 \begin{center}
 \resizebox{0.85\linewidth}{!}{
@@ -931,8 +931,8 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00023_uncertainty.png}
 }
 \end{center}
+\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset \citep{pascal}.} Ground truth segmentation not available for test images.}
 \label{fig:qual_pascal}
-\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset \citep{pascal}.}}
 \end{figure}
 % \begin{figure}[h!]
 % \centering
@@ -1009,13 +1009,13 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 
 
 \subsubsection{Qualitative observations}
-\cref{fig:qual_camvid} shows segmentations and model uncertainty results from Bayesian SegNet (SegNet evaluated with Monte Carlo dropout \citep{kendall2015bayesian}) on CamVid Road Scenes \citep{brostow2009semantic}. \cref{fig:qual_sun} shows SUN RGB-D Indoor Scene Understanding \citep{song2015sun} results and \cref{fig:qual_pascal} has Pascal VOC \citep{pascal} results. These figures show the qualitative performance of Bayesian SegNet. We observe that segmentation predictions are smooth, with a sharp segmentation around object boundaries. Also, when the model predicts an incorrect label, the model uncertainty is generally very high. More generally, we observe that a high model uncertainty is predominantly caused by three situations.
+\fig{qual_camvid2} shows segmentations and model uncertainty results from Bayesian SegNet (SegNet evaluated with Monte Carlo dropout \citep{kendall2015bayesian}) on CamVid Road Scenes \citep{brostow2009semantic}. \cref{fig:qual_sun} shows SUN RGB-D Indoor Scene Understanding \citep{song2015sun} results and \cref{fig:qual_pascal} has Pascal VOC \citep{pascal} results. These figures show the qualitative performance of Bayesian SegNet. We observe that segmentation predictions are smooth, with a sharp segmentation around object boundaries. Also, when the model predicts an incorrect label, the model uncertainty is generally very high. More generally, we observe that a high model uncertainty is predominantly caused by three situations.
 
-Firstly, at class boundaries the model often displays a high level of uncertainty. This reflects the ambiguity surrounding the definition of defining where these labels transition. The Pascal results clearly illustrated this in \cref{fig:qual_pascal}.
+Firstly, at class boundaries the model often displays a high level of uncertainty. This reflects the ambiguity surrounding the definition of defining where these labels transition. The Pascal results clearly illustrate this in \cref{fig:qual_pascal}.
 
 Secondly, objects which are visually difficult to identify often appear uncertain to the model. This is often the case when objects are occluded or at a distance from the camera.
 
-The third situation causing model uncertainty is when the object appears visually ambiguous to the model. As an example, cyclists in the CamVid results (\cref{fig:qual_camvid}) are visually similar to pedestrians, and the model often displays uncertainty around them. We observe similar results with visually similar classes in SUN (\cref{fig:qual_sun}) such as chair and sofa, or bench and table. In Pascal this is often observed between cat and dog, or train and bus classes.
+The third situation causing model uncertainty is when the object appears visually ambiguous to the model. As an example, cyclists in the CamVid results (\cref{fig:qual_camvid2}) are visually similar to pedestrians, and the model often displays uncertainty around them. We observe similar results with visually similar classes in SUN (\cref{fig:qual_sun}) such as chair and sofa, or bench and table. In Pascal this is often observed between cat and dog, or train and bus classes.
 
 \begin{figure}[t]
     \centering
@@ -1031,7 +1031,7 @@ The third situation causing model uncertainty is when the object appears visuall
         \label{fig:unc_freq2}
         \caption{Class frequency vs. mean model uncertainty}
     \end{subfigure}
-	\caption[Analysis of Bayesian SegNet's model uncertainty.]{\textbf{Bayesian SegNet performance and frequency compared to mean model uncertainty} for each class in CamVid road scene understanding dataset. These figures show a strong inverse relationships. We observe in (a) that the model is more confident with more accurate classes. (b) shows classes that Bayesian SegNet is more confident at are more prevalent in the dataset. Conversely, for the more rare classes such as Sign Symbol and Bicyclist, Bayesian SegNet has a much higher model uncertainty.}
+	\caption[Analysis of Bayesian SegNet's model uncertainty.]{\textbf{Bayesian SegNet performance and frequency compared to mean model uncertainty} for each class in CamVid road scene understanding dataset. These figures show a strong inverse relationships. We observe in (a) that the model is more confident with accurate classes. (b) shows classes that Bayesian SegNet is confident at are more prevalent in the dataset. Conversely, for the rare classes such as Sign Symbol and Bicyclist, Bayesian SegNet has a much higher model uncertainty.}
 \end{figure}
 
 \subsubsection{Quality of Uncertainty Metric}
