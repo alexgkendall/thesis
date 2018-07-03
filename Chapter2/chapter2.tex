@@ -126,7 +126,7 @@ FCN-Basic-NoDimReduction &1.625 & 64x & 44.8 & \textbf{84.1} & 63.4 & \textbf{50
 FCN-Basic-NoAddition-NoDimReduction &1.625 & 0 & 43.9 & 80.5 & 61.6 & 45.9 & 83.7 & 54.8 & 45.5 \\ \hline 
 \end{tabular}}
 
-\caption[Quantitative segmentation decoder comparison.]{Comparison of decoder variants. We quantify the performance using global (G), class average (C) and mean of intersection over union (IoU) metrics. The testing accuracies are shown as percentages for both natural frequency and median frequency balanced training loss function. SegNet-Basic performs at the same level as FCN-Basic but requires only storing max-pooling indices and is therefore more memory efficient during inference. Note that the theoretical memory requirement reported is based only on the size of the first layer encoder feature map. Networks with larger decoders and those using the encoder feature maps in full perform best, although they are least efficient.}
+\caption[Quantitative segmentation decoder comparison.]{Comparison of decoder variants on the CamVid dataset. We quantify the performance using global (G), class average (C) and mean of intersection over union (IoU) metrics. The testing accuracies are shown as percentages for both natural frequency and median frequency balanced training loss function. SegNet-Basic performs at the same level as FCN-Basic but requires only storing max-pooling indices and is therefore more memory efficient during inference. Note that the theoretical memory requirement reported is based only on the size of the first layer encoder feature map. Networks with larger decoders and those using the encoder feature maps in full perform best, although they are least efficient.}
 \label{PoolingQuantCAFFE}
 \end{table*}
 \end{landscape}}
@@ -590,7 +590,7 @@ In practice, we train the network to predict the log variance, $s_i := \log \hat
 \cL_{BNN}(\theta) = \frac{1}{D} \sum_i \frac{1}{2} \exp (-s_i) ||\y_i-\hat{\y}_i||^2 + \frac{1}{2} s_i.
 \label{eqn:aleatoric_regression_loss}
 \end{equation}
-This is because it is more numerically stable than regressing the variance, $\sigma^2$, as the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-s_i)$ is resolved to the positive domain giving valid values for variance.
+This is because it is more stable than regressing the variance, $\sigma^2$, as the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-s_i)$ is resolved to the positive domain giving valid values for variance.
 
 % Following the notation of the previous section, the predictive uncertainty in this combined model can be approximated using:
 % \begin{align*}
@@ -850,7 +850,7 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00083_uncertainty.png}
 }
 \end{center}
-\caption[Bayesian SegNet results on the CamVid dataset.]{\footnotesize\textbf{Bayesian SegNet results on CamVid dataset \citep{brostow2009semantic}.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.
+\caption[Bayesian SegNet results on the CamVid dataset.]{\footnotesize\textbf{Bayesian SegNet results on CamVid dataset.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.
    }
 \label{fig:qual_camvid2}
 
@@ -896,7 +896,7 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00856_uncertainty.png}
 }
 \end{center}
-\caption[Bayesian SegNet results on the SUN RGB-D dataset.]{\footnotesize \textbf{Bayesian SegNet results on the SUN RGB-D dataset \citep{song2015sun}.}}
+\caption[Bayesian SegNet results on the SUN RGB-D dataset.]{\footnotesize \textbf{Bayesian SegNet results on the SUN RGB-D dataset.} From top: input image, ground truth, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes.}
 \label{fig:qual_sun}
 
 \begin{center}
@@ -931,7 +931,7 @@ In this section we wish to study the effectiveness of modelling aleatoric and ep
 \includegraphics[height=0.125\linewidth]{BayesianSegNet/segnet_bayes_00023_uncertainty.png}
 }
 \end{center}
-\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset \citep{pascal}.} Ground truth segmentation not available for test images.}
+\caption[Bayesian SegNet results on the Pascal VOC dataset.]{\footnotesize \textbf{Pascal VOC 2012 dataset.} From top: input image, Bayesian SegNet's segmentation prediction, and overall model uncertainty averaged across all classes. Ground truth segmentation not available for Pascal test images.}
 \label{fig:qual_pascal}
 \end{figure}
 % \begin{figure}[h!]
@@ -1232,7 +1232,7 @@ Prior approaches to simultaneously learning multiple tasks use a na{\"i}ve weigh
 \label{fig:teaser}
 \end{figure*}
 
-Specifically, we demonstrate our method in learning scene geometry and semantics with three tasks. Firstly, we learn to classify objects at a pixel level, also known as semantic segmentation \citep{long2015fully,badrinarayanan2017segnet,YuKoltun2016,chen2016deeplab,CRFRNN}. Secondly, our model performs instance segmentation, which is the harder task of segmenting separate masks for each individual object in an image (for example, a separate, precise mask for each individual car on the road) \citep{pinheiro2015learning,hariharan2015hypercolumns,dai2016instance,bai2016deep}. This is a more complicated task than semantic segmentation, as it requires not only an estimate of each pixel's class, but also which object that pixel belongs to. It is also more complicated than object detection, which often predicts object bounding boxes alone \citep{girshick2014rich}. Finally, our model predicts pixel-wise metric depth. Depth by recognition has been demonstrated using dense prediction networks with supervised \citep{eigen2015predicting} and unsupervised \citep{garg2016unsupervised} deep learning. However it is very hard to estimate depth in a way which generalises well. We show that we can improve our estimation of geometry \textit{and} depth by using semantic labels and multi-task deep learning.
+Specifically, we demonstrate our method in learning scene geometry and semantics with three tasks. Firstly, we learn to classify objects at a pixel level, also known as semantic segmentation \citep{long2015fully,badrinarayanan2017segnet,YuKoltun2016,chen2016deeplab,CRFRNN}. Secondly, our model performs instance segmentation, which is the harder task of segmenting separate masks for each individual object in an image (for example, a separate, precise mask for each individual car on the road) \citep{pinheiro2015learning,hariharan2015hypercolumns,dai2016instance,bai2016deep,de2017semantic}. This is a more complicated task than semantic segmentation, as it requires not only an estimate of each pixel's class, but also which object that pixel belongs to. It is also more complicated than object detection, which often predicts object bounding boxes alone \citep{girshick2014rich}. Finally, our model predicts pixel-wise metric depth. Depth by recognition has been demonstrated using dense prediction networks with supervised \citep{eigen2015predicting} and unsupervised \citep{garg2016unsupervised} deep learning. However it is very hard to estimate depth in a way which generalises well. We show that we can improve our estimation of geometry \textit{and} depth by using semantic labels and multi-task deep learning.
 
 In existing literature, separate deep learning models would be used to learn depth regression, semantic segmentation and instance segmentation to create a complete scene understanding system. Given a single monocular input image, our system is the first to produce a semantic segmentation, a dense estimate of metric depth and an instance level segmentation jointly (\fig{teaser}). While other vision models have demonstrated multi-task learning, we show how to learn to combine semantics and geometry. Combining these tasks into a single model ensures that the model agrees between the separate task outputs while reducing computation. Finally, we show that using a shared representation with multi-task learning improves performance on various metrics, making the models more effective.
 
@@ -1253,9 +1253,9 @@ Fine-tuning \cite{agrawal2015learning,oquab2014learning} is a basic example of m
 Other models alternate learning between each training task, for example in natural language processing \cite{collobert2008unified}.
 Multi-task learning can also be used in a data streaming setting \cite{thrun1996learning}, or to prevent forgetting previously learned tasks in reinforcement learning \cite{kirkpatrick2017overcoming}. It can also be used to learn unsupervised features from various data sources with an auto-encoder \cite{ngiam2011multimodal}.
 
-In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \cite{liao2016understand} or classification and detection \cite{sermanet2013overfeat}. MultiNet \cite{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \cite{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \cite{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. Multi-task deep learning has also been used for geometry and regression tasks. \cite{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \cite{kendall2015posenet} is a model which learns camera position and orientation. UberNet \cite{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \citet{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
+In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \cite{liao2016understand} or classification and detection \cite{sermanet2013overfeat}. MultiNet \cite{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \cite{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \cite{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. SpineNet \cite{jamaludin2016spinenet} predicts multiple radiological scores in MRI images for medical imaging. Multi-task deep learning has also been used for geometry and regression tasks. \cite{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \cite{kendall2015posenet} is a model which learns camera position and orientation. UberNet \cite{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \citet{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
 
-More importantly, all previous methods which learn multiple tasks simultaneously use a na{\"i}ve weighted sum of losses, where the loss weights are uniform, or crudely and manually tuned. In this work we propose a principled way of combining multiple loss functions to simultaneously learn multiple objectives using homoscedastic task uncertainty. We illustrate the importance of appropriately weighting each task in deep learning to achieve good performance and show that our method can learn to balance these weightings optimally.
+More importantly, all previous methods which learn multiple tasks simultaneously use a na{\"i}ve weighted sum of losses, where the loss weights are uniform, or crudely and manually tuned. An example is UberNet \cite{kokkinos2016ubernet}, which is unable to obtain the performance of separately trained models for each task. In this work we give an explaination and solution for this problem. We propose a principled way of combining multiple loss functions to simultaneously learn multiple objectives using homoscedastic task uncertainty. We illustrate the importance of appropriately weighting each task in deep learning to achieve good performance and show that our method can learn to balance these weightings optimally.
 
 
 
@@ -1661,7 +1661,7 @@ This last objective can be seen as learning the relative weights of the losses f
 This construction can be trivially extended to arbitrary combinations of discrete and continuous loss functions, allowing us to learn the relative weights of each loss in a principled and well-founded way. This loss is smoothly differentiable, and is well formed such that the task weights will not converge to zero. In contrast, directly learning the weights using a simple linear sum of losses \eqn{basic_loss} would result in weights which quickly converge to zero. In the following sections we introduce our experimental model and present empirical results.
 
 In practice, we train the network to predict the log variance, $s := \log \sigma^2$.
-This is because it is more numerically stable than regressing the variance, $\sigma^2$, as the loss avoids any division by zero. The exponential mapping also allows us to regress unconstrained scalar
+This is because it is more stable than regressing the variance, $\sigma^2$, as the loss avoids any division by zero. The exponential mapping also allows us to regress unconstrained scalar
 values, where $\exp(-s)$ is resolved to the positive domain giving valid values for variance.
 
 %Our final learning objective is,
@@ -1677,13 +1677,7 @@ values, where $\exp(-s)$ is resolved to the positive domain giving valid values 
 \subsection{Scene Understanding Model}
 \label{sec:arch}
 
-To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \cite{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a corresponding number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}.
-
-The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. Our encoder is based on DeepLabV3 \cite{chen2017rethinking}, which is a state of the art semantic segmentation framework. We use ResNet101 \cite{he2016deep} as the base feature encoder, followed by an Atrous Spatial Pyramid Pooling (ASPP) module \cite{chen2017rethinking} to increase contextual awareness. We apply dilated convolutions in this encoder, such that the resulting feature map is sub-sampled by a factor of 8 compared to the input image dimensions. 
-
-We then split the network into separate decoders (with separate weights) for each task. The purpose of the decoder is to learn a mapping from the shared features to an output. Each decoder consists of a $3\times3$ convolutional layer with output feature size 256, followed by a $1\times1$ layer regressing the task's output. 
-%We use in-place activated batch normalisation \cite{bulo2017place} for all layers in our model. 
-Further architectural details are described in Appendix \ref{apdx:arch}.
+To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \cite{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}. The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. The purpose of the decoder is to learn a mapping from the shared features to an output. Specific architecture details are provided in \sct{model_analysis_mt}.
 
 \textbf{Semantic Segmentation.}
 We use the cross-entropy loss to learn pixel-wise class probabilities, averaging the loss over the pixels with semantic labels in each mini-batch.
@@ -1743,6 +1737,7 @@ We train with supervised labels using pixel-wise metric inverse depth using a $L
 \end{figure}
 
 \subsection{Model Analysis}
+\label{sct:model_analysis_mt}
 
 \afterpage{%
     \clearpage% Flush earlier floats (otherwise order might not be correct)
@@ -1779,8 +1774,6 @@ Approx. optimal weights & 0.89 & 0.01 & 0.1 & 62.8\% & 3.61 & 0.549 \\
 }
 
 We demonstrate the efficacy of our method on CityScapes \cite{Cordts2016Cityscapes}, a large dataset for road scene understanding. It comprises of stereo imagery, from automotive grade stereo cameras with a $22cm$ baseline, labelled with instance and semantic segmentations from 20 classes. Depth images are also provided, labelled using SGM \cite{Hirschmuller2008}, which we treat as pseudo ground truth. Additionally, we assign zero inverse depth to pixels labelled as sky. The dataset was collected from a number of cities in fine weather and consists of 2,975 training and 500 validation images at $2048\times1024$ resolution. 1,525 images are withheld for testing on an online evaluation server.
-
-Further training details, and optimisation hyperparameters, are provided in Appendix \ref{apdx:arch}.
 
 
 \paragraph{Model Architecture Details}

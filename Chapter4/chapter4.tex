@@ -254,7 +254,7 @@ GC-Net + Soft classification loss \citep{luo2016efficient} & 20.6 & 12.3 & 10.4 
 
 In this section we present qualitative and quantitative results on two datasets, Scene Flow \citep{MIFDB16} and KITTI \citep{Geiger2012CVPR,Menze2015CVPR}. Firstly, in Section \ref{sec:model_results} we experiment with different variants of our model and justify a number of our design choices using the Scene Flow dataset \citep{MIFDB16}. In Section \ref{sec:kitti_results} we present results of our approach on the KITTI dataset and set a new state-of-the-art benchmark. Finally, we measure our model's capacity to learn context in Section \ref{sec:saliency}.
 
-For the experiments in this section, we implement our architecture using TensorFlow \citep{abadi2016tensorflow}. All models are optimized end-to-end with RMSProp \citep{tieleman2012lecture} and a constant learning rate of $1 \times 10^{-3}$. We train with a batch size of 1 using a $256\times512$ randomly located crop from the input images. Before training we normalize each image such that the pixel intensities range from $-1$ to $1$. We trained the network (from a random initialization) on Scene Flow for approximately 150k iterations which takes two days on a single NVIDIA Titan-X GPU. For the KITTI dataset we fine-tune the models pre-trained on Scene Flow for a further 50k iterations. For our experiments on Scene Flow we use F=32, H=540, W=960, D=192 and on the KITTI dataset we use F=32, H=388, W=1240, D=192 for feature size, image height, image width and maximum disparity, respectively.
+For the experiments in this chapter, we implement our architecture using TensorFlow \citep{abadi2016tensorflow}. All models are optimized end-to-end with RMSProp \citep{tieleman2012lecture} and a constant learning rate of $1 \times 10^{-3}$. We train with a batch size of 1 using a $256\times512$ randomly located crop from the input images. Before training we normalize each image such that the pixel intensities range from $-1$ to $1$. We trained the network (from a random initialization) on Scene Flow for approximately 150k iterations which takes two days on a single NVIDIA Titan-X GPU. For the KITTI dataset we fine-tune the models pre-trained on Scene Flow for a further 50k iterations. For our experiments on Scene Flow we use F=32, H=540, W=960, D=192 and on the KITTI dataset we use F=32, H=388, W=1240, D=192 for feature size, image height, image width and maximum disparity, respectively.
 
 \subsection{Model Design Analysis}
 \label{sec:model_results}
@@ -388,7 +388,7 @@ The closest method to our architecture is DispNetC \citep{MIFDB16}, which is an 
 
 In \tbl{generalize} we investigate our model's ability to generalize across unseen datasets. We observe that our model is able to perform amicably on KITTI test data, even when only trained on Scene Flow -- a dissimilar synthetic dataset.
 
-\begin{table}[t]
+\begin{table}[h]
 \centering
 \begin{tabular}{l|l|c|c}
 Train data & Test data & \textgreater3 px & Mean Error \\ \hline \hline
@@ -519,7 +519,7 @@ In practice, we train the network to predict the log variance, $\hat{s}_i := \lo
 \mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i|| \exp (-\hat{s}_i) + \frac{1}{2}\hat{s}_i.
 \label{eqn:aleatoric_regression_loss2}
 \end{equation}
-This is because it is more numerically stable than regressing the variance, $\hat{\sigma}^2$, as the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-\hat{s}_i)$ is resolved to the positive domain giving valid values for variance.
+This is because it is more stable than regressing the variance, $\hat{\sigma}^2$, as the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-\hat{s}_i)$ is resolved to the positive domain giving valid values for variance.
 
 In \tbl{scene_flow2} and \tbl{kitti_val} we show that modelling heteroscedastic uncertainty improves performance on the SceneFlow and KITTI datasets (experimental details are described in \sct{experiments}). We observe that allowing the network to predict uncertainty allows it effectively to temper the residual loss by $\exp(-\hat{s}_i)$, which depends on the data. This acts similarly to an intelligent robust regression function. It allows the network to adapt the residual's weighting, and even allows the network to learn to attenuate the effect from erroneous labels. This makes the model more robust to noisy data -- inputs for which the model learned to predict high uncertainty for will have a smaller effect on the loss.
 
@@ -615,9 +615,6 @@ with weighting factor, $\beta=0.1$. During training, we sample equally from the 
 
 \tbl{scene_flow2} compares models with no labels (unsupervised), various fractions of the labels, through to all labels (supervised). We observe an increase in performance as the amount of labels increases. \tbl{kitti_val} shows that the effect is less pronounced on KITTI with real-world data, however semi-supervised learning reduces the need for pretraining on the synthetic SceneFlow dataset.
 
-\section{Experiments}
-\label{sec:experiments}
-
 \begin{table*}[t]
 \centering
 \resizebox{\linewidth}{!}{
@@ -637,62 +634,6 @@ Modelling & Loss & SceneFlow & Labelled & Unlabelled & MAE & RMS & $>1px$ & $>3p
 \end{tabular}}
 	\caption[Results on KITTI with probabilistic model.]{\textbf{KITTI 2015 validation set results} \citep{Geiger2012CVPR}. The KITTI 2015 stereo dataset dataset contains 200 labelled training images, of which we randomly hold out 40 as a validation set, and report these results here. We also use the KITTI odometry dataset, which contains 43,552 unlabelled stereo frames. Modelling uncertainty improves results. Naively combining supervised and unsupervised training worsens performance. However using semi-supervised learning with our probabilistic model achieves better results, even without pretraining on the SceneFlow dataset \citep{MIFDB16}.  }
 	\label{tbl:kitti_val}
-\end{table*}
-
-In this section we present qualitative and quantitative results on two datasets, Scene Flow \citep{MIFDB16} and KITTI \citep{Geiger2012CVPR,Menze2015CVPR}.
-%Firstly, in Section ?? we experiment with different variants of our model and justify a number of our design choices using the Scene Flow dataset \citep{MIFDB16}.
-In \cref{sec:benchmark_stereo} we present results of our approach on the KITTI dataset.
-
-For the experiments in this section, we optimize all models end-to-end with RMSProp \citep{tieleman2012lecture} and a constant learning rate of $1 \times 10^{-3}$. We train with a batch size of 1 using a $256\times512$ randomly located crop from the input images. Before training we normalize each image such that the pixel intensities range from $-1$ to $1$. For our experiments on SceneFlow and KITTI we use a maximum disparity of 192. Training the model from a random initialization takes approximately 150k iterations, or two days on a single NVIDIA Titan-X GPU. 
-
-\subsection{Benchmarking Accuracy}
-\label{sec:benchmark_stereo}
-
-In \tbl{kitti_test} we evaluate the performance of our model on the KITTI 2012 and 2015 stereo datasets \citep{Geiger2012CVPR,Menze2015CVPR}. These consist of challenging and varied road scene imagery collected from a test vehicle. Ground truth depth maps for training and evaluation are obtained from LIDAR data. KITTI is a prominent dataset for benchmarking stereo algorithms. The downside is that it only contains $200$ training images, which handicaps learning algorithms. for this reason, we pre-train our model on the large synthetic dataset, Scene Flow \citep{MIFDB16}. This helps to prevent our model from over-fitting the very small KITTI training dataset. We hold out 40 image pairs as our validation set. In \tbl{kitti2012_2} and \ref{tbl:kitti2015_2} we compare our method to other approaches on the KITTI 2012 and 2015 datasets.%\footnote{Full leaderboard:~\url{www.cvlibs.net/datasets/kitti/}}. 
-%, by a notable margin. We improve on state-of-the-art by XX\% and XX\% for KITTI 2015 and 2012 respectively.
-
-\begin{table*}[t]
-\centering
-\begin{subtable}[t]{\linewidth}
-\centering
-          \resizebox{\linewidth}{!}{
-\begin{tabular}{l|cc|cc|cc|cc|c} \hline
-& \multicolumn{2}{c|}{\textgreater 2 px} & \multicolumn{2}{c|}{\textgreater3 px} & \multicolumn{2}{c|}{\textgreater 5 px} & \multicolumn{2}{c|}{Mean Error} & Runtime \\
-& Non-Occ & All & Non-Occ & All & Non-Occ & All & Non-Occ & All & (s) \\ \hline \hline
-%SPS-st \citep{yamaguchi2014efficient}  		& 4.98 & 6.28 & 3.39 & 4.41 & 2.33 & 3.00 & 0.9 px & 1.0 px & 2 \\
-%Deep Embed \citep{chen2015deep} 				& 5.05 & 6.47 & 3.10 & 4.24 & 1.92 & 2.68 & 0.9 px & 1.1 px & 3 \\
-Content-CNN \citep{luo2016efficient}  		& 4.98 & 6.51 & 3.07 & 4.29 & 2.03 & 2.82 & 0.8 px & 1.0 px & \textbf{0.7} \\ 
-MC-CNN \citep{zbontar2016stereo} 			& 3.90 & 5.45 & 2.43 & 3.63 & 1.64 & 2.39 & 0.7 px & 0.9 px & 67 \\
-%PBCP \citep{Seki2016BMVC} 					& 3.62 & 5.01 & 2.36 & 3.45 & 1.62 & 2.32 & 0.7 px & 0.9 px & 68 \\
-Displets v2 \citep{guney2015displets} 		& 3.43 & 4.46 & 2.37 & 3.09 & 1.72 & 2.17 & 0.7 px & 0.8 px & 265 \\
-GC-Net \citep{kendall2017end}				& 2.71 & 3.46 & 1.77 & 2.30 & 1.12 & 1.46 & \textbf{0.6 px} & \textbf{0.7 px} & 0.9 \\ \hline
-Probabilistic GC-Net (this work)           	& \textbf{2.65} & \textbf{3.40} & \textbf{1.72} & \textbf{2.21} & \textbf{1.08} & \textbf{1.39} & \textbf{0.6 px} & \textbf{0.7 px} & 0.9 \\
-\end{tabular}}
-	\caption{\textbf{KITTI 2012 test set results} \citep{Geiger2012CVPR}. This benchmark contains 194 train and 195 test gray-scale image pairs.}
-\vspace{5 mm}
-	\label{tbl:kitti2012_2}
-\end{subtable}
-\vspace{7 mm}
-\begin{subtable}[t]{\linewidth}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}{l|ccc|ccc|c} \hline
-                   & \multicolumn{3}{c|}{All Pixels} & \multicolumn{3}{c|}{Non-Occluded Pixels} & Runtime \\
-                   & D1-bg   & D1-fg   & D1-all  & D1-bg   & D1-fg   & D1-all  & (s)     \\ \hline \hline
-%MBM \citep{einecke2015multi}			& 4.69 & 13.05 & 6.08 & 4.33 & 12.12 & 5.61 & 0.13 \\
-ELAS \citep{geiger2010efficient} 	& 7.86 & 19.04 & 9.72 & 6.88 & 17.73 & 8.67 & 0.3 \\
-Content-CNN \citep{luo2016efficient} & 3.73 & 8.58  & 4.54 & 3.32 & 7.44  & 4.00 & 1.0 \\
-DispNetC \citep{MIFDB16} 			& 4.32 & \textbf{4.41}  & 4.34 & 4.11 & \textbf{3.72}  & 4.05 & \textbf{0.06}\\
-MC-CNN \citep{zbontar2016stereo}     & 2.89 & 8.88  & 3.89 & 2.48 & 7.64  & 3.33 & 67  \\
-PBCP \citep{Seki2016BMVC} 			& 2.58 & 8.74  & 3.61 & 2.27 & 7.71  & 3.17 & 68  \\
-Displets v2 \citep{guney2015displets}& 3.00 & 5.56  & 3.43 & 2.73 & 4.95  & 3.09 & 265 \\
-GC-Net \citep{kendall2017end}		& 2.21 & 6.16  & 2.87 & 2.02 & 5.58  & 2.61 & 0.9 \\ \hline
-Probabilistic GC-Net (this work)	& \textbf{2.15} & 6.11  & \textbf{2.81} & \textbf{1.99} & 5.49  & \textbf{2.55} & 0.9 \\ 
-\end{tabular}}
-	\caption[KITTI benchmark results.]{\textbf{KITTI 2015 test set results} \citep{Menze2015CVPR}. This benchmark contains 200 training and 200 test colour image pairs. The results show the percentage of pixels which have greater than three pixels or 5\% disparity error from all 200 test images.}
-	\label{tbl:kitti2015_2}
-\end{subtable}
-	\caption[Comparison to other stereo methods on the KITTI test set.]{Comparison to other stereo methods on the test set of \textbf{KITTI 2012 and 2015 benchmarks} \citep{Geiger2012CVPR,Menze2015CVPR}.}
 \end{table*}
 
 \begin{figure*}[p]
@@ -759,7 +700,8 @@ Probabilistic GC-Net (this work)	& \textbf{2.15} & 6.11  & \textbf{2.81} & \text
 	\label{fig:results_qualitative_kitti}
 \end{figure*}
 
-\subsection{Benchmarking Uncertainty}
+\section{Benchmarking Uncertainty}
+\label{sec:experiments}
 
 In this section we quantitatively analyse the effectiveness of the measure of heteroscedastic uncertainty. We show that it is well calibrated and correlates strongly with metric error.
 

@@ -19,11 +19,11 @@ State of the art video scene understanding systems typically process individual 
 \end{center}
    \vspace{-5mm}
    \caption[Video scene understanding.]{\textbf{Video scene understanding.} Our model jointly learns to estimate scene motion (bottom right), depth (bottom left) and semantic segmentation (top right), in addition to estimating ego-motion over video input. We learn semantics with supervised learning and are able to learn geometry and motion using self-supervised learning, without labelled training data.} % Code and video results can be found at the following website: \texttt{url released with publication}}
-\label{fig:teaser}
+\label{fig:video_teaser}
    \vspace{-5mm}
 \end{figure}
 
-In this paper, we introduce an end-to-end deep learning architecture for video semantic segmentation. We jointly learn optical flow, ego-motion and depth with self-supervised learning and semantic segmentation with supervised learning. We propose a motion-aware gated recurrent unit (motion-GRU) which is able to use motion and geometry to account for ego-motion and scene dynamics when propagating state information temporally. Since labelling video frames with semantic labels is prohibitively expensive, we show that learning geometry with unsupervised learning can provide a powerful dense training signal for video. In summary, the novel contributions of this paper are;
+In this paper, we introduce an end-to-end deep learning architecture for video semantic segmentation. We jointly learn optical flow, ego-motion and depth with self-supervised learning and semantic segmentation with supervised learning. Example outputs from the model are shown in \fig{fig:video_teaser}. We propose a motion-aware gated recurrent unit (motion-GRU) which is able to use motion and geometry to account for ego-motion and scene dynamics when propagating state information temporally. Since labelling video frames with semantic labels is prohibitively expensive, we show that learning geometry with unsupervised learning can provide a powerful dense training signal for video. In summary, the novel contributions of this paper are;
 \begin{enumerate}%[topsep=0.5ex,itemsep=0ex,partopsep=1ex,parsep=1ex]
 \item showing how to account for motion when propagating recurrent states over time by using motion recurrent units,
 \item demonstrating how to provide training signal for each video frame with self-supervised learning of motion and geometry,
@@ -62,7 +62,7 @@ Video segmentation has also been considered in an off-line setting. This is a ve
 Other related work is in video object segmentation and video motion segmentation. These works are largely driven by datasets like DAVIS \cite{Perazzi2016}. This problem focuses on segmenting a single object, or moving objects \cite{tsai2016video,tokmakov2017learning,vertens2017smsnet} in video. Unlike our work, explicit knowledge of semantics is not required. Rather, algorithms commonly use one-shot learning for masks and propagate them through video \cite{voigtlaender17BMVC}. Similar to scene understanding, the best approaches today segment single frames independently \cite{caelles2017one,khoreva2016learning}.
 
 \section{Temporal Scene Understanding Model}
-\label{sec:model}
+\label{sec:video_model}
 
 \begin{figure*}[!t]
 \begin{center}
@@ -213,7 +213,7 @@ where we estimate the task (homoscedastic) uncertainty of each loss, $i$, by opt
 
 \section{Experiments}
 
-In this section we perform a number of experiments to evaluate the importance of compensating for motion in our architecture in addition to other design decisions. All experiments include all features of the model described in \sct{model}, unless otherwise stated. By default we train over four time-steps, with a warm-up of four steps. The entire model is randomly initialised before training.
+In this section we perform a number of experiments to evaluate the importance of compensating for motion in our architecture in addition to other design decisions. All experiments include all features of the model described in \sct{video_model}, unless otherwise stated. By default we train over four time-steps, with a warm-up of four steps. The entire model is randomly initialised before training.
 
 \textbf{Dataset.} We use the CityScapes dataset for all experiments \cite{Cordts2016Cityscapes} which is a road scene understanding dataset. The CityScapes dataset was taken from a vehicle in various locations around Germany. It provides $5000$ stereo images with $1024 \times 2048$ resolution (of which $2,975$ are for training) with dense semantic segmentation labels. It also provides $19$ preceding and $10$ future frames around each labelled frame.
 %In some experiments, we also make use of the propagated CityScapes dataset \cite{budvytis2017large}. 
@@ -284,7 +284,7 @@ We describe three main challenges for training video scene understanding models,
 
 \subsection{Trick \#1: Account for Motion when Propagating States.} 
 
-In \sct{model} we presented the hypothesis that naive temporal convolutional models using recurrent units (e.g. \cite{patraucean2015spatio,valipour2017recurrent}) degraded performance compared to equivalent per-frame models, because they are unable to account for motion. In this section, we show that our motion-GRU improves performance over a per-frame baseline. We use self-supervised learning with photometric reprojection error to learn a representation of optical flow.
+In \sct{video_model} we presented the hypothesis that naive temporal convolutional models using recurrent units (e.g. \cite{patraucean2015spatio,valipour2017recurrent}) degraded performance compared to equivalent per-frame models, because they are unable to account for motion. In this section, we show that our motion-GRU improves performance over a per-frame baseline. We use self-supervised learning with photometric reprojection error to learn a representation of optical flow.
 
 We also found that it was beneficial to initialise the recurrent connections such that they are close to identity connections \cite{he2016deep}, similar to the work of \cite{gadde2017semantic}. To achieve this, we offset the bias in the motion-GRU gates to $4.0$ so that the initialisation of the sigmoid function evaluates to near $1.0$. Consequently, the state will be almost entirely forgotten, and the signal almost entirely propagated from the current time-step. The model incrementally learns to incorporate temporal information by back-propagation.
 

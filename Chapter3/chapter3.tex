@@ -47,20 +47,115 @@ Finally, in \cref{loc_unc} we show how to formulate Bayesian deep learning model
 
 \section{Localisation}
 
-
-Appearance-based relocalisation has had success \citep{cummins2008fab,sunderhauf2015performance} in coarsely locating the camera among a limited, discretised set of place labels, leaving the pose estimation to a separate system. This work presents a means of computing continuous pose directly from appearance. The scene may include multiple objects and need not be viewed under consistent conditions. For example the scene may include dynamic objects like people and cars or experience changing weather conditions. 
-
-Simultaneous localization and mapping (SLAM) is a traditional solution to this problem. We introduce a new framework for localization which removes several issues faced by typical SLAM pipelines, such as the need to store densely spaced key-frames, the need to maintain separate mechanisms for appearance-based localization and landmark-based pose estimation, and a need to establish frame-to-frame feature correspondence. We do this by mapping monocular images to a high-dimensional representation that is robust to nuisance variables. We empirically show that this representation is a smoothly varying injective (one-to-one) function of pose, allowing us to regress pose directly from the image without need of tracking.
-
 Large scale localisation research can be divided into two categories; place recognition and metric localisation. Place recognition discretises the world into a number of landmarks and attempts to identify which place is visible in a given image. Traditionally, this has been modelled as an image retrieval problem \citep{chen2011city,cummins2008fab,Torii13CVPR,Schindler07CVPR} enabling the use of efficient and scalable retrieval approaches \citep{Nister06CVPR,Philbin07CVPR} such as Bag-of-Words (BoW)~\citep{Sivic03ICCV}, VLAD~\citep{Jegou-CVPR10,Delhumeau-ACMMM13}, and Fisher vectors~\citep{Jegou-PAMI12}. Deep learning models have also been shown to be effective for creating efficient descriptors. Many approaches leverage classification networks~\citep{RSMC14,GWGL14,BL15,Tolias16ICLR}, and fine tune them on localisation datasets \citep{BSCL14}. Other work of note is PlaNet \citep{weyand2016planet} which trained a classification network to localise images on a world scale. However, all these networks must discretise the world into places and are unable to produce a fine grained estimate of 6-DOF pose.
 
 In contrast, metric localisation techniques estimate the metric position and orientation of the camera. Traditionally, this has been approached by computing the pose from correspondences between two-dimensional (2-D) features in the query image and three-dimensional (3-D) points in the model, which are determined through descriptor matching \citep{Choudhary12ECCV,li2010location,li2012worldwide,Sattler12ECCV,svarm2014accurate}. This assumes that the scene is represented by a 3-D structure-from-motion model. The full 6 degree-of-freedom pose of a query image can be estimated very precisely \citep{Sattler14ECCV}. However these methods require a 3-D model with a large database of features and efficient retrieval methods. They are expensive to compute, often do not scale well, and are often not robust to changing environmental conditions \citep{walch2016image}.
 
-In this work, we address the more challenging problem of metric localisation with deep learning. PoseNet \citep{kendall2015posenet} introduced the technique of training a convolutional neural network to regress camera pose. It combines the strengths of place recognition and localisation approaches: it can globally relocalise without a good initial pose estimate, and produces a continuous metric pose. Rather than building a map (or database of landmark features), the neural network learns features whose size, unlike a map, does not require memory linearly proportional to the size of the scene.
+In this work, we address the more challenging problem of metric localisation with deep learning. In PoseNet \citep{kendall2015posenet}, we introduced the technique of training a convolutional neural network to regress camera pose. It combines the strengths of place recognition and localisation approaches: it can globally relocalise without a good initial pose estimate, and produces a continuous metric pose. Rather than building a map (or database of landmark features), the neural network learns features whose size, unlike a map, does not require memory linearly proportional to the size of the scene.
+
+Our method removes several issues faced by typical SLAM pipelines, such as the need to store densely spaced key-frames, the need to maintain separate mechanisms for appearance-based localization and landmark-based pose estimation, and a need to establish frame-to-frame feature correspondence. We do this by mapping monocular images to a high-dimensional representation that is robust to nuisance variables. We empirically show that this representation is a smoothly varying injective (one-to-one) function of pose, allowing us to regress pose directly from the image without need of tracking. The scene may include multiple objects and need not be viewed under consistent conditions. For example the scene may include dynamic objects like people and cars or experience changing weather conditions. 
 
 Later work has extended PoseNet to use RGB-D input \citep{li2017indoor}, learn relative ego-motion \citep{melekhov2017relative}, improve the context of features \citep{walch2016image}, localise over video sequences \citep{clark2017vidloc} and interpret relocalisation uncertainty with Bayesian Neural Networks \citep{kendall2015modelling}. Additionally, \citep{walch2016image} demonstrate PoseNet's efficacy on featureless indoor environments, where they demonstrate that SIFT based structure from motion techniques fail in the same environment.
 
 Although PoseNet is scalable and robust \citep{kendall2015posenet}, it does not produce sufficiently accurate estimates of Pose compared to traditional methods \citep{Sattler14ECCV}. It was designed with a naive regression loss function which trains the network end-to-end without any consideration for geometry. This problem is the focus of this chapter -- we do not want to throw away the decades of research into multi-view geometry \citep{hartley2000}. We improve PoseNet's performance by learning camera pose with a fundamental treatment of scene geometry.
+
+\section{Relocalisation Datasets}
+\label{sec:data}
+
+\begin{figure}[p]
+\centering
+
+	\begin{subfigure}[t]{\linewidth}
+	\resizebox{\linewidth}{!}{
+		\includegraphics[width=0.2\linewidth]{Datasets/chess.png}
+		\includegraphics[width=0.2\linewidth]{Datasets/fire.png}
+		\includegraphics[width=0.2\linewidth]{Datasets/kitchen.png}
+		\includegraphics[width=0.2\linewidth]{Datasets/office.png}
+		\includegraphics[width=0.2\linewidth]{Datasets/stairs.png}
+		}
+	\caption{7 Scenes Dataset - 43,000 images from seven scenes in small indoor environments \citep{shotton2013scene}.}
+	~
+	~
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+	\resizebox{\linewidth}{!}{
+		\includegraphics[width=0.2\linewidth]{Datasets/frame00015.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/frame00016.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/frame00428.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/frame00599.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/frame00615.jpg}
+		}
+        
+    \vspace{0.5mm}
+	\resizebox{\linewidth}{!}{
+		\includegraphics[width=0.2\linewidth]{Datasets/image1_000031.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/image2_000585.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/image2_001336.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/image2_001351.jpg}
+		\includegraphics[width=0.2\linewidth]{Datasets/image2_002421.jpg}
+		}
+	\caption{Cambridge Landmarks Dataset - over 10,000 images from six scenes around Cambridge, UK \citep{kendall2015posenet}.}
+	~
+	~
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{\linewidth}
+	\resizebox{\linewidth}{!}{
+		\includegraphics[height=50mm]{Datasets/5n4k3_2760651317.jpg}
+		\includegraphics[height=50mm]{Datasets/5pointloperist_2921626253.jpg}
+		\includegraphics[height=50mm]{Datasets/709913_2965924825.jpg}
+		\includegraphics[height=50mm]{Datasets/7145465_N07_3065208814.jpg}
+		\includegraphics[height=50mm]{Datasets/7286581_N04_2243494109.jpg}
+		}
+        
+    \vspace{0.5mm}
+	\resizebox{\linewidth}{!}{
+		\includegraphics[height=50mm]{Datasets/8117903_N06_2955594865.jpg}
+		\includegraphics[height=50mm]{Datasets/8117903_N06_2956436946.jpg}
+		\includegraphics[height=50mm]{Datasets/8223442_N02_3167519460.jpg}
+		\includegraphics[height=50mm]{Datasets/10970812_N05_2553025324.jpg}
+		\includegraphics[height=50mm]{Datasets/16798538_N06_1808716980.jpg}
+		}
+	\caption{Dubrovnik 6K Dataset - 6,000 images from a variety of camera types in Dubrovnik, Croatia \citep{li2010location}.}
+	~
+	~
+	\end{subfigure}
+	
+\caption[Localisation datasets.]{\textbf{Example images randomly chosen from each dataset.} This illustrates the wide variety of settings and scales and the challenging array of environmental factors such as lighting, occlusion, dynamic objects and weather which are captured in each dataset.}
+\label{fig:datasets}
+\end{figure}
+
+
+\afterpage{%
+    \clearpage% Flush earlier floats (otherwise order might not be correct)
+    \begin{landscape}% Landscape page
+    \centering
+\begin{table*}[t]
+	\centering
+	\resizebox{\linewidth}{!}{
+	\begin{tabular}{l|c|c|c|c|c|c|c|c}
+		Dataset & Type & Scale & Imagery & Scenes & Train Images & Test Images & 3-D Points & Spatial Area \\ \hline \hline
+		7 Scenes & Indoor & Room & RGB-D sensor (Kinect) & 7 & 26,000 & 17,000 & - & 4$\times$3m \\
+		Cambridge Landmarks & Outdoor & Street & Mobile phone camera & 6 & 8,380 & 4,841 & 2,097,191 & 100$\times$500m \\
+		Dubrovnik 6K & Outdoor & Small town & Internet images (Flikr) & 1 & 6,044 & 800 & 2,106,456 & 1.5$\times$1.5km \\
+		%San Francisco (SF1) & Outdoor & Large city & Vehicle camera & 1 & 790,000 & 800 & 75,410,077 & 4$\times$4km\\
+	\end{tabular}}
+	\caption[Localisation dataset details.]{\textbf{Summary of the localisation datasets used in this chapter's experiments.} We compare 7 Scenes \citep{shotton2013scene}, Cambridge Landmarks \citep{kendall2015posenet}, Dubrovnik \citep{li2012worldwide} and the San Francisco \citep{chen2011city} datasets. These datasets are all publicly available. They demonstrate our method's performance over a range of scales for both indoor and outdoor applications.}
+	\label{tbl:datasets}
+\end{table*}
+\end{landscape}
+\clearpage% Flush page
+}
+
+In this section, we describe the datasets we use in this chapter to demonstrate our localisation algorithms.
+Deep learning often requires very large datasets. However annotating ground truth labels on these datasets is often expensive or very labour intensive. We can leverage structure from motion \citep{Snavely08IJCV}, or similar algorithms \citep{shotton2013scene}, to autonomously generate training labels (camera poses) from image data \citep{kendall2015posenet}. We use three datasets to benchmark our approach. These datasets are summarised in \tbl{datasets} and example imagery is shown in \fig{datasets}. We use these datasets to demonstrate our method's performance across a range of settings and scales. We endeavour to demonstrate the general applicability of the approach.
+
+\textbf{Cambridge Landmarks} \citep{kendall2015posenet} was collected for this thesis and is publicly released for use\footnote{The Cambridge Landmarks dataset is publicly available for download at \footnotesize{\url{http://mi.eng.cam.ac.uk/projects/localisation/}}}. It provides labelled video data to train and test pose regression algorithms in an outdoor urban setting. It was collected using a smart phone and structure from motion was used to generate the pose labels \citep{wu2013towards}. Significant urban clutter such as pedestrians and vehicles were present and data was collected from many different points in time representing different lighting and weather conditions. Train and test images are taken from distinct walking paths and not sampled from the same trajectory making the regression challenging.
+
+\textbf{7 Scenes} \citep{shotton2013scene} is an indoor dataset which was collected with a Kinect RGB-D sensor. Ground truth poses were computed using Kinect Fusion \citep{shotton2013scene}. The dataset contains seven scenes which were captured around an office building. Each scene typically consists of a single room. The dataset was originally created for RGB-D relocalisation. It is extremely challenging for purely visual relocalisation using SIFT-like features, as it contains many ambiguous textureless features.
+
+\textbf{Dubrovnik 6K} \citep{li2012worldwide} is a dataset consisting of 6,044 train and 800 test images which were obtained from the internet. They are taken from Dubrovnik's old town in Croatia which is a UNESCO world heritage site. The images are predominantly captured by tourists with a wide variety of camera types. Ground truth poses for this dataset were computed using structure from motion.
 
 \section{Model for Camera Pose Regression}
 \label{sec:model}
@@ -196,19 +291,19 @@ where we optimise the homoscedastic uncertainties, $\hat{\sigma}_x^2$, $\hat{\si
 
 This loss consists of two components; the residual regressions and the uncertainty regularization terms. We learn the variance, $\sigma^2$, implicitly from the loss function. As the variance is larger, it has a tempering effect on the residual regression term; larger variances (or uncertainty) results in a smaller residual loss. The second regularization term prevents the network from predicting infinite uncertainty (and therefore zero loss). As we expect quaternion values to have much smaller values (they are constrained to the unit manifold), their noise, $\sigma_q^2$ should be much smaller than the position noise, $\sigma_x^2$, which can be many meters in magnitude. As $\sigma_q^2$ should be much smaller than $\sigma_x^2$, orientation regression should be weighted much higher than position -- with a similar effect to $\beta$ in \eqn{loss1}.
 
-In practice, we learn $\hat{s}:=\log\hat{\sigma}^2$ because it is more numerically stable \citep{kendall2017multi}:
+In practice, we learn $\hat{s}:=\log\hat{\sigma}^2$,:
 \begin{equation}
 \label{eqn:loss5}
-\mathcal{L}_{\sigma}(I) = \mathcal{L}_x(I) \exp (-\hat{s}_x) + \hat{s}_x + \mathcal{L}_{q}(I) \exp (-\hat{s}_q) + \hat{s}_q
+\mathcal{L}_{\sigma}(I) = \mathcal{L}_x(I) \exp (-\hat{s}_x) + \hat{s}_x + \mathcal{L}_{q}(I) \exp (-\hat{s}_q) + \hat{s}_q.
 \end{equation}
-This is more numerically stable than regressing the variance, $\sigma^2$, because the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-s_i)$ is resolved to the positive domain giving valid values for variance. We find that this loss is very robust to our initialisation choice for the homoscedastic task uncertainty values. Only an approximate initial guess is required, we arbitrarily use initial values of $\hat{s}_x=0.0, \hat{s}_q=-3.0$, for all scenes.
+This is more stable than regressing the variance, $\sigma^2$, because the loss avoids a potential division by zero. The exponential mapping also allows us to regress unconstrained scalar values, where $\exp(-s_i)$ is resolved to the positive domain giving valid values for variance. We find that this loss is very robust to our initialisation choice for the homoscedastic task uncertainty values. Only an approximate initial guess is required, we arbitrarily use initial values of $\hat{s}_x=0.0, \hat{s}_q=-3.0$, for all scenes.
 
 \subsubsection{Learning from Geometric Reprojection Error}
 \label{sec:reproj}
 
 Perhaps a more desirable loss is one that does not require balancing of rotational and positional quantities at all. Reprojection error of scene geometry is a representation which combines rotation and translation naturally in a single scalar loss \citep{hartley2000}. Reprojection error is given by the residual between 3-D points in the scene projected onto a 2-D image plane using the ground truth and predicted camera pose. It therefore converts rotation and translation quantities into image coordinates. This naturally weights translation and rotation quantities depending on the scene and camera geometry.
 
-To formulate this loss, we first define a function, $\uppi$, which maps a 3-D point, $\mathbf{g}$, to 2-D image coordinates, $(u,v)^T$:
+All losses in this chapter so far assume images and pose labels are provided. In this section, we formulate a reprojection error loss that assumes we have images and the corresponding 3-D points from the scene geometry. First, we define a function, $\uppi$, which maps a 3-D point, $\mathbf{g}$, to 2-D image coordinates, $(u,v)^T$:
 \begin{equation}
 \uppi (\mathbf{x},\mathbf{q},\mathbf{g}) \mapsto \begin{pmatrix} u \\ v \end{pmatrix}
 \end{equation}
@@ -233,6 +328,8 @@ This loss implicitly combines rotation and translational quantities into image c
 Interestingly, when experimenting with the original weighted loss in \eqn{loss1} we observed that the hyperparameter $\beta$ was an approximate function of the scene geometry. We observed that it was a function of the landmark distance and size in the scene. Our intuition was that the optimal choice for $\beta$ was approximating the reprojection error in the scene geometry. For example, if the scene is very far away, then rotation is more significant than translation and vice versa. This function is not trivial to model for complex scenes with a large number of landmarks. It will vary significantly with each training example in the dataset. By learning with reprojection error we can use our knowledge of the scene geometry more directly to automatically infer this weighting.
 
 Projecting geometry through a projection model is a differentiable operation involving matrix multiplication. Therefore we can use this loss to train our model with stochastic gradient descent. It is important to note that we do not need to know the intrinsic camera parameters to project this 3-D geometry. This is because we apply the same projection to both the model prediction and ground truth measurement, so we can use arbitrary values.
+
+One practical consideration, is when training with stochastic gradient descent, it is desirable to have uniform tensors for each data-point in a mini-batch, in order to parallelise computation. Therefore, at training time we sample a random 100 points from the subset of the scene's geometry which is visible by the camera's view. This ensures a uniformly shaped mini-batch, while having enough points to sample. If less than 100 points are visible, then we repeat the points until 100.
 
 It should be noted that we need to have some knowledge of the scene's geometry in order to have 3-D points to reproject. The geometry is often known; if our data is obtained through structure from motion, RGBD data or other sensory data (see \sct{data}). Only points from the scene which are visible in the image $I$ are used to compute the loss. We also found it was important for numerical stability to ignore points which are projected outside the image bounds.
 
@@ -274,103 +371,6 @@ An important choice for these losses is the regression norm, $\left\lVert~\right
 \label{sec:exp}
 
 To train and benchmark our model on a number of datasets we rescale the input images such that the shortest side is of length 256. We normalise the images so that input pixel intensities range from $-1$ to $1$. We train our PoseNet architecture using an implementation in TensorFlow \citep{abadi2016tensorflow}. All models are optimised end-to-end with ADAM \citep{kingma2014adam} using the default parameters and a learning rate of $1 \times 10^{-4}$. We train each model until the training loss converges. We use a batch size of 64 on a NVIDIA Titan X (Pascal) GPU, training takes approximately 20k - 100k iterations, or 4 hours - 1 day.
-
-\subsection{Datasets}
-\label{sec:data}
-
-\begin{figure}[p]
-\centering
-
-	\begin{subfigure}[t]{\linewidth}
-	\resizebox{\linewidth}{!}{
-		\includegraphics[width=0.2\linewidth]{Datasets/chess.png}
-		\includegraphics[width=0.2\linewidth]{Datasets/fire.png}
-		\includegraphics[width=0.2\linewidth]{Datasets/kitchen.png}
-		\includegraphics[width=0.2\linewidth]{Datasets/office.png}
-		\includegraphics[width=0.2\linewidth]{Datasets/stairs.png}
-		}
-	\caption{7 Scenes Dataset - 43,000 images from seven scenes in small indoor environments \citep{shotton2013scene}.}
-	~
-	~
-	\end{subfigure}
-	
-	\begin{subfigure}[t]{\linewidth}
-	\resizebox{\linewidth}{!}{
-		\includegraphics[width=0.2\linewidth]{Datasets/frame00015.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/frame00016.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/frame00428.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/frame00599.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/frame00615.jpg}
-		}
-        
-    \vspace{0.5mm}
-	\resizebox{\linewidth}{!}{
-		\includegraphics[width=0.2\linewidth]{Datasets/image1_000031.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/image2_000585.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/image2_001336.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/image2_001351.jpg}
-		\includegraphics[width=0.2\linewidth]{Datasets/image2_002421.jpg}
-		}
-	\caption{Cambridge Landmarks Dataset - over 10,000 images from six scenes around Cambridge, UK \citep{kendall2015posenet}.}
-	~
-	~
-	\end{subfigure}
-	
-	\begin{subfigure}[t]{\linewidth}
-	\resizebox{\linewidth}{!}{
-		\includegraphics[height=50mm]{Datasets/5n4k3_2760651317.jpg}
-		\includegraphics[height=50mm]{Datasets/5pointloperist_2921626253.jpg}
-		\includegraphics[height=50mm]{Datasets/709913_2965924825.jpg}
-		\includegraphics[height=50mm]{Datasets/7145465_N07_3065208814.jpg}
-		\includegraphics[height=50mm]{Datasets/7286581_N04_2243494109.jpg}
-		}
-        
-    \vspace{0.5mm}
-	\resizebox{\linewidth}{!}{
-		\includegraphics[height=50mm]{Datasets/8117903_N06_2955594865.jpg}
-		\includegraphics[height=50mm]{Datasets/8117903_N06_2956436946.jpg}
-		\includegraphics[height=50mm]{Datasets/8223442_N02_3167519460.jpg}
-		\includegraphics[height=50mm]{Datasets/10970812_N05_2553025324.jpg}
-		\includegraphics[height=50mm]{Datasets/16798538_N06_1808716980.jpg}
-		}
-	\caption{Dubrovnik 6K Dataset - 6,000 images from a variety of camera types in Dubrovnik, Croatia \citep{li2010location}.}
-	~
-	~
-	\end{subfigure}
-	
-\caption[Localisation datasets.]{\textbf{Example images randomly chosen from each dataset.} This illustrates the wide variety of settings and scales and the challenging array of environmental factors such as lighting, occlusion, dynamic objects and weather which are captured in each dataset.}
-\label{fig:datasets}
-\end{figure}
-
-
-\afterpage{%
-    \clearpage% Flush earlier floats (otherwise order might not be correct)
-    \begin{landscape}% Landscape page
-    \centering
-\begin{table*}[t]
-	\centering
-	\resizebox{\linewidth}{!}{
-	\begin{tabular}{l|c|c|c|c|c|c|c|c}
-		Dataset & Type & Scale & Imagery & Scenes & Train Images & Test Images & 3-D Points & Spatial Area \\ \hline \hline
-		7 Scenes & Indoor & Room & RGB-D sensor (Kinect) & 7 & 26,000 & 17,000 & - & 4$\times$3m \\
-		Cambridge Landmarks & Outdoor & Street & Mobile phone camera & 6 & 8,380 & 4,841 & 2,097,191 & 100$\times$500m \\
-		Dubrovnik 6K & Outdoor & Small town & Internet images (Flikr) & 1 & 6,044 & 800 & 2,106,456 & 1.5$\times$1.5km \\
-		%San Francisco (SF1) & Outdoor & Large city & Vehicle camera & 1 & 790,000 & 800 & 75,410,077 & 4$\times$4km\\
-	\end{tabular}}
-	\caption[Localisation dataset details.]{\textbf{Summary of the localisation datasets used in this chapter's experiments.} We compare 7 Scenes \citep{shotton2013scene}, Cambridge Landmarks \citep{kendall2015posenet}, Dubrovnik \citep{li2012worldwide} and the San Francisco \citep{chen2011city} datasets. These datasets are all publicly available. They demonstrate our method's performance over a range of scales for both indoor and outdoor applications.}
-	\label{tbl:datasets}
-\end{table*}
-\end{landscape}
-\clearpage% Flush page
-}
-
-Deep learning performs extremely well on large datasets. However annotating ground truth labels on these datasets is often expensive or very labour intensive. We can leverage structure from motion \citep{Snavely08IJCV}, or similar algorithms \citep{shotton2013scene}, to autonomously generate training labels (camera poses) from image data \citep{kendall2015posenet}. We use three datasets to benchmark our approach. These datasets are summarised in \tbl{datasets} and example imagery is shown in \fig{datasets}. We use these datasets to demonstrate our method's performance across a range of settings and scales. We endeavour to demonstrate the general applicability of the approach.
-
-\textbf{Cambridge Landmarks} \citep{kendall2015posenet} provides labelled video data to train and test pose regression algorithms in an outdoor urban setting. It was collected using a smart phone and structure from motion was used to generate the pose labels \citep{wu2013towards}. Significant urban clutter such as pedestrians and vehicles were present and data was collected from many different points in time representing different lighting and weather conditions. Train and test images are taken from distinct walking paths and not sampled from the same trajectory making the regression challenging.
-
-\textbf{7 Scenes} \citep{shotton2013scene} is an indoor dataset which was collected with a Kinect RGB-D sensor. Ground truth poses were computed using Kinect Fusion \citep{shotton2013scene}. The dataset contains seven scenes which were captured around an office building. Each scene typically consists of a single room. The dataset was originally created for RGB-D relocalisation. It is extremely challenging for purely visual relocalisation using SIFT-like features, as it contains many ambiguous textureless features.
-
-\textbf{Dubrovnik 6K} \citep{li2012worldwide} is a dataset consisting of 6,044 train and 800 test images which were obtained from the internet. They are taken from Dubrovnik's old town in Croatia which is a UNESCO world heritage site. The images are predominantly captured by tourists with a wide variety of camera types. Ground truth poses for this dataset were computed using structure from motion.
 
 \subsection{Comparison of Loss Functions}
 \label{sec:loss_exp}
