@@ -203,7 +203,7 @@ This operation is fully differentiable and allows us to train and regress dispar
 	        \caption{Multi-modal distribution with prescaling}
 		\end{subfigure}
 	\end{center}
-	\caption[A graphical depiction of the soft argmin operation.]{\textbf{A graphical depiction of the soft argmin operation} (Section \ref{sec:argmin}) which we propose in this work. It is able to take a cost curve along each disparity line and output an estimate of the argmin by summing the product of each disparity's softmax probability and it's disparity index. (a) demonstrates that this very accurately captures the true argmin when the curve is uni-modal. (b) demonstrates a failure case when the data is bi-modal with one peak and one flat region. (c) demonstrates that this failure may be avoided if the network learns to pre-scale the cost curve, because the softmax probabilities will tend to be more extreme, producing a uni-modal result.}
+	\caption[A graphical depiction of the soft argmin operation.]{\textbf{A graphical depiction of the soft argmin operation} (Section \ref{sec:argmin}) which we propose in this work. It is able to take a cost curve along each disparity line and output an estimate of the argmin by summing the product of each disparity's softmax probability and its disparity index. (a) demonstrates that this very accurately captures the true argmin when the curve is uni-modal. (b) demonstrates a failure case when the data is bi-modal with one peak and one flat region. (c) demonstrates that this failure may be avoided if the network learns to pre-scale the cost curve, because the softmax probabilities will tend to be more extreme, producing a uni-modal result.}
 	\label{fig:argmin}
 \end{figure*}
 

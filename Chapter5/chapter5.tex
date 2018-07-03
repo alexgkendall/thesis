@@ -89,7 +89,7 @@ Using the feature representations from the previous and current time steps, we c
 \begin{equation}
 \mathbf{y}^{flow}_{(t-1) \to t} = flownet(\mathbf{x}_t, \mathbf{x}_{(t-1)}).
 \end{equation}
-This results in an estimate of optical flow for each feature from the encoder, $\mathbf{y}^{flow}_{(t-1) \to t} $. We save computation by estimating flow using features shared by the semantic encoder, rather than the raw image. This is because initial filters in flow and semantic encoders will be very similar \cite{zeiler2014visualizing}. We also improve the representation by leveraging multitask learning \cite{caruana1998multitask}.
+This results in an estimate of optical flow for each feature from the encoder, $\mathbf{y}^{flow}_{(t-1) \to t} $. We save computation by estimating flow using features shared by the semantic encoder, rather than the raw image. This is because initial filters in flow and semantic encoders will be very similar \cite{zeiler2014visualizing}. We also improve the representation by leveraging multi-task learning \cite{caruana1998multitask}.
 
 In order to improve the feature representation for the current frame, and to incorporate motion, we concatenate the flow feature map (from the layer immediately prior to the flow regression), $\mathbf{y}'^{flow}_{(t-1) \to t}$, and the image features at the current time $\mathbf{x}_t$. We pass these features through some convolutional layers to learn a representation with motion-aware features:
 \begin{equation}
@@ -463,5 +463,5 @@ We show that explicitly modelling geometry, in the form of depth and motion, is 
 We find that in order to train over long video sequences, it is important to provide a training signal for each frame. Labelling the semantics of each frame is too expensive. Therefore we demonstrate that learning motion and depth with unsupervised learning is an effective method to provide a training signal for each image in a long video sequence.
 
 \textbf{Uncertainty.}
-While the probabilistic techniques from the previous chapters can be applied to this model, this chapter does not explicitly explore the application of uncertainty to the problem of video scene understanding. However, we utilise uncertainty for multitask learning using the technique from \cref{sec:multitask} to simultaneously learn depth, motion and semantics.
+While the probabilistic techniques from the previous chapters can be applied to this model, this chapter does not explicitly explore the application of uncertainty to the problem of video scene understanding. However, we utilise uncertainty for multi-task learning using the technique from \cref{sec:multitask} to simultaneously learn depth, motion and semantics.
 
