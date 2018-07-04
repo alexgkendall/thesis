@@ -153,7 +153,15 @@ In our model we learn a deep representation through a number of 2-D convolutiona
 \subsection{Cost Volume}
 \label{sec:cost_vol}
 
-We use the deep unary features to compute the stereo matching cost by forming a cost volume. While a naive approach might simply concatenate the left and right feature maps, forming a cost volume allows us to constrain the model in a way which preserves our knowledge of the geometry of stereo vision. For each stereo image, we form a cost volume of dimensionality {\it height}$\times${\it width}$\times${(\it max disparity + 1)}$\times${\it feature size}. We achieve this by concatenating each unary feature with their corresponding unary from the opposite stereo image across each disparity level, and packing these into the 4D volume. 
+\begin{figure*}[t]
+	\begin{center}
+		\includegraphics[width=\linewidth]{arch_disparity.pdf}
+	\end{center}
+	\caption[1D illustration of GC-Net architecture.]{\textbf{An explaination of the GC-Net architecture along a single disparity line}. This figure shows the transformations each layer imposes on the features.}
+	\label{fig:arch_disparity}
+\end{figure*}
+
+We use the deep unary features to compute the stereo matching cost by forming a cost volume. While a naive approach might simply concatenate the left and right feature maps, forming a cost volume allows us to constrain the model in a way which preserves our knowledge of the geometry of stereo vision. For each stereo image, we form a cost volume of dimensionality {\it height}$\times${\it width}$\times${(\it max disparity + 1)}$\times${\it feature size}. We achieve this by concatenating each unary feature with their corresponding unary from the opposite stereo image across each disparity level, and packing these into the 4D volume. This is shown in \fig{arch_disparity} for a single disparity line.
 
 Crucially, we retain the feature dimension through this operation, unlike previous work which uses a dot product style operation which decimates the feature dimension \citep{luo2016efficient}. This allows us to learn to incorporate context which can operate over feature unaries (Section \ref{sec:regularise}). We find that forming a cost volume with concatenated features improves performance over subtracting features or using a distance metric. Our intuition is that by maintaining the feature unaries, the network has the opportunity to learn an absolute representation (because it is not a distance metric) and carry this through to the cost volume. This gives the architecture the capacity to learn semantics. In contrast, using a distance metric restricts the network to only learning relative representations between features, and cannot carry absolute feature representations through to cost volume.
 
@@ -505,7 +513,7 @@ To train a heteroscedastic neural network, we need to infer the posterior distri
 
 The GC-Net model is designed to output disparity estimates, $\hat{d}$, by forming a cost volume of H$\times$W$\times$D$\times$1 dimensions, representing a cost for each disparity and pixel location. To adapt the architecture to regress an uncertainty measurement, $\hat{\sigma}^2$, we modify the final 3-D convolutional layer to regress a cost volume of H$\times$W$\times$D$\times$2 dimensions. The final dimension's first value still represents the cost, with the second value representing uncertainty. To form the final output, the first values are put through a soft argmin layer across the disparity dimension (see \citep{kendall2017end} for a description) to form the disparity estimates, $\hat{d}$. We average the second values across the disparity dimension to form uncertainty estimates, $\hat{\sigma}^2$. Both these outputs are of size H$\times$W.
 
-In the following section we explain the loss function we use to learn to estimate disparity and heteroscedastic uncertainty. We fix a Gaussian likelihood to model our heteroscedastic uncertainty. This induces a minimization objective \citep{nix1994estimating} given labelled output points, $d$:
+In the following section we explain the loss function we use to learn to estimate disparity and heteroscedastic uncertainty. We use the losses derived in \cref{sect:hetero}. We fix a Gaussian likelihood to model our heteroscedastic uncertainty. This induces a minimization objective given labelled output points, $d$:
 \begin{equation}
 \mathcal{L}_{heteroscedastic} = \frac{1}{2N} \sum_i ||d_i-\hat{d}_i||\hat{\sigma}^{-2}_i + \frac{1}{2}\log{\hat{\sigma}^2_i}
 \label{eqn:bayes_loss}

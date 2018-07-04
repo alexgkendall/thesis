@@ -1021,15 +1021,15 @@ The third situation causing model uncertainty is when the object appears visuall
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{scatter_camvid-eps-converted-to.pdf}
+        \includegraphics[width=\linewidth]{scatter_camvid.eps}
+        \caption{Performance vs. mean\\model uncertainty}
         \label{fig:unc_acc2}
-        \caption{Performance vs. mean model uncertainty}
     \end{subfigure}
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{scatter_camvid_freq-eps-converted-to.pdf}
+        \includegraphics[width=\linewidth]{scatter_camvid_freq.eps}
+        \centering\caption{Class frequency vs. mean\\model uncertainty}
         \label{fig:unc_freq2}
-        \caption{Class frequency vs. mean model uncertainty}
     \end{subfigure}
 	\caption[Analysis of Bayesian SegNet's model uncertainty.]{\textbf{Bayesian SegNet performance and frequency compared to mean model uncertainty} for each class in CamVid road scene understanding dataset. These figures show a strong inverse relationships. We observe in (a) that the model is more confident with accurate classes. (b) shows classes that Bayesian SegNet is confident at are more prevalent in the dataset. Conversely, for the rare classes such as Sign Symbol and Bicyclist, Bayesian SegNet has a much higher model uncertainty.}
 \end{figure}
@@ -1040,7 +1040,7 @@ To understand what causes the model to be uncertain, we have plotted the relatio
 
 In \cref{sec:results} we showed that modelling aleatoric and epistemic uncertainty improves prediction performance, with the combination performing even better. In this section we show similar trade-offs for the performance of the uncertainty estimate. We compare aleatoric and epistemic uncertainty quantitatively and again show that aleatoric is more effective in big-data settings, however the combination performs best.
 
-\begin{figure}[h]
+\begin{figure}[t]
     \centering
     \begin{subfigure}[t]{0.45\linewidth}
         \centering
@@ -1060,7 +1060,7 @@ In \cref{sec:results} we showed that modelling aleatoric and epistemic uncertain
 Firstly, in \cref{fig:prec_recall} we show precision-recall curves for regression and classification models. They show how our model performance improves by removing pixels with uncertainty larger than various percentile thresholds. This illustrates two behaviours of aleatoric and epistemic uncertainty measures. Firstly, it shows that the uncertainty measurements are able to correlate well with accuracy, because all curves are strictly decreasing functions. We observe that precision is lower when we have more points that the model is not certain about. Secondly, the curves for epistemic and aleatoric uncertainty models are very similar. This shows that each uncertainty ranks pixel confidence similarly to the other uncertainty, in the absence of the other uncertainty.
 This suggests that when only one uncertainty is explicitly modelled, it attempts to compensate for the lack of the alternative uncertainty when possible.
 
-\begin{figure*}[h]
+\begin{figure*}[t]
 \centering
     \begin{subfigure}[t]{0.33\linewidth}
         \centering
@@ -1247,15 +1247,15 @@ In summary, the key contributions of this Section are:
 
 \subsection{Multi-task Learning}
 
-We first review related work from the field of multi-task learning. Multi-task learning aims to improve learning efficiency and prediction accuracy for each task, when compared to training a separate model for each task \cite{thrun1996learning,baxter2000model}. It can be considered an approach to inductive knowledge transfer which improves generalisation by sharing the domain information between complimentary tasks. It does this by using a shared representation to learn multiple tasks -- what is learned from one task can help learn other tasks \cite{caruana1998multitask}.
+We first review related work from the field of multi-task learning. Multi-task learning aims to improve learning efficiency and prediction accuracy for each task, when compared to training a separate model for each task \citep{thrun1996learning,baxter2000model}. It can be considered an approach to inductive knowledge transfer which improves generalisation by sharing the domain information between complimentary tasks. It does this by using a shared representation to learn multiple tasks -- what is learned from one task can help learn other tasks \citep{caruana1998multitask}.
 
-Fine-tuning \cite{agrawal2015learning,oquab2014learning} is a basic example of multi-task learning, where we can leverage different learning tasks by considering them as a pre-training step.
-Other models alternate learning between each training task, for example in natural language processing \cite{collobert2008unified}.
-Multi-task learning can also be used in a data streaming setting \cite{thrun1996learning}, or to prevent forgetting previously learned tasks in reinforcement learning \cite{kirkpatrick2017overcoming}. It can also be used to learn unsupervised features from various data sources with an auto-encoder \cite{ngiam2011multimodal}.
+Fine-tuning \citep{agrawal2015learning,oquab2014learning} is a basic example of multi-task learning, where we can leverage different learning tasks by considering them as a pre-training step.
+Other models alternate learning between each training task, for example in natural language processing \citep{collobert2008unified}.
+Multi-task learning can also be used in a data streaming setting \citep{thrun1996learning}, or to prevent forgetting previously learned tasks in reinforcement learning \citep{kirkpatrick2017overcoming}. It can also be used to learn unsupervised features from various data sources with an auto-encoder \citep{ngiam2011multimodal}.
 
-In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \cite{liao2016understand} or classification and detection \cite{sermanet2013overfeat}. MultiNet \cite{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \cite{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \cite{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. SpineNet \cite{jamaludin2016spinenet} predicts multiple radiological scores in MRI images for medical imaging. Multi-task deep learning has also been used for geometry and regression tasks. \cite{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \cite{kendall2015posenet} is a model which learns camera position and orientation. UberNet \cite{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \citet{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
+In computer vision there are many examples of methods for multi-task learning. Many focus on semantic tasks, such as classification and semantic segmentation \citep{liao2016understand} or classification and detection \citep{sermanet2013overfeat}. MultiNet \citep{teichmann2016multinet} proposes an architecture for detection, classification and semantic segmentation. CrossStitch networks \citep{misra2016cross} explore methods to combine multi-task neural activations. Uhrig et al. \citep{uhrig2016pixel} learn semantic and instance segmentations under a classification setting. SpineNet \citep{jamaludin2016spinenet} predicts multiple radiological scores in MRI images for medical imaging. Multi-task deep learning has also been used for geometry and regression tasks. \citep{eigen2015predicting} show how to learn semantic segmentation, depth and surface normals. PoseNet \citep{kendall2015posenet} is a model which learns camera position and orientation. UberNet \citep{kokkinos2016ubernet} learns a number of different regression and classification tasks under a single architecture. In this work we are the first to propose a method for jointly learning depth regression, semantic and instance segmentation. Like the model of \citet{eigen2015predicting}, our model learns both semantic and geometry representations, which is important for scene understanding. However, our model learns the much harder task of instance segmentation which requires knowledge of both semantics and geometry. This is because our model must determine the class and spatial relationship for each pixel in each object for instance segmentation.
 
-More importantly, all previous methods which learn multiple tasks simultaneously use a na{\"i}ve weighted sum of losses, where the loss weights are uniform, or crudely and manually tuned. An example is UberNet \cite{kokkinos2016ubernet}, which is unable to obtain the performance of separately trained models for each task. In this work we give an explaination and solution for this problem. We propose a principled way of combining multiple loss functions to simultaneously learn multiple objectives using homoscedastic task uncertainty. We illustrate the importance of appropriately weighting each task in deep learning to achieve good performance and show that our method can learn to balance these weightings optimally.
+More importantly, all previous methods which learn multiple tasks simultaneously use a na{\"i}ve weighted sum of losses, where the loss weights are uniform, or crudely and manually tuned. An example is UberNet \citep{kokkinos2016ubernet}, which is unable to obtain the performance of separately trained models for each task. In this work we give an explaination and solution for this problem. We propose a principled way of combining multiple loss functions to simultaneously learn multiple objectives using homoscedastic task uncertainty. We illustrate the importance of appropriately weighting each task in deep learning to achieve good performance and show that our method can learn to balance these weightings optimally.
 
 
 
@@ -1493,14 +1493,14 @@ Multi-task learning concerns the problem of optimising a model with respect to m
 \label{eqn:basic_loss}
 L_{total}= \sum_i w_i L_{i}.
 \end{equation}
-This is the dominant approach used by prior work \cite{teichmann2016multinet,sermanet2013overfeat,liao2016understand,uhrig2016pixel}, for example for dense prediction tasks \cite{kokkinos2016ubernet}, for scene understanding tasks \cite{eigen2015predicting} and for rotation (in quaternions) and translation (in meters) for camera pose \cite{kendall2015posenet}. However, there are a number of issues with this method. Namely, model performance is extremely sensitive to weight selection, $w_i$, as illustrated in \fig{scale_factor}. These weight hyper-parameters are expensive to tune, often taking many days for each trial. Therefore, it is desirable to find a more convenient approach which is able to learn the optimal weights.
+This is the dominant approach used by prior work \citep{teichmann2016multinet,sermanet2013overfeat,liao2016understand,uhrig2016pixel}, for example for dense prediction tasks \citep{kokkinos2016ubernet}, for scene understanding tasks \citep{eigen2015predicting} and for rotation (in quaternions) and translation (in meters) for camera pose \citep{kendall2015posenet}. However, there are a number of issues with this method. Namely, model performance is extremely sensitive to weight selection, $w_i$, as illustrated in \fig{scale_factor}. These weight hyper-parameters are expensive to tune, often taking many days for each trial. Therefore, it is desirable to find a more convenient approach which is able to learn the optimal weights.
 
 More concretely, let us consider a network which learns to predict pixel-wise depth and semantic class from an input image. In \fig{scale_factor} the two boundaries of each plot show models trained on individual tasks, with the curves showing performance for varying weights $w_i$ for each task. We observe that at some optimal weighting, the joint network performs better than separate networks trained on each task individually (performance of the model on individual tasks is seen at both edges of the plot: $w=0$ and $w=1$). At near-by values to the optimal weight the network performs worse on one of the tasks. However, searching for these optimal weightings is expensive and increasingly difficult with large models with numerous tasks. \fig{scale_factor} also shows a similar result for two regression tasks; instance segmentation and depth regression. We next show how to learn optimal task weightings using ideas from probabilistic modelling.
 
 \subsection{Homoscedastic uncertainty as task-dependent uncertainty}
 \label{sec:uncertainty}
 
-In Bayesian modelling, there are two main types of uncertainty one can model \cite{kendall2017uncertainties}.
+In Bayesian modelling, there are two main types of uncertainty one can model \citep{kendall2017uncertainties}.
 \begin{itemize}
 \item \textit{Epistemic uncertainty} is uncertainty in the model, which captures what our model does not know due to lack of training data. It can be explained away with increased training data.
 \item \textit{Aleatoric uncertainty} captures our uncertainty with respect to information which our data cannot explain. Aleatoric uncertainty can be explained away with the ability to observe all explanatory variables with increasing precision.
@@ -1516,6 +1516,7 @@ In a multi-task setting, we show that the task uncertainty captures the relative
 \label{sec:mt_loss}
 
 In this section we derive a multi-task loss function based on maximising the Gaussian likelihood with homoscedastic uncertainty.
+This extends the derivation in \cref{sect:hetero} to multi-task likelihoods.
 Let $\f^\W(\x)$ be the output of a neural network with weights $\W$ on input $\x$. We define the following probabilistic model. 
 For regression tasks we define our likelihood as a Gaussian with mean given by the model output:
 \begin{equation}
@@ -1648,7 +1649,7 @@ In the last transition we introduced the explicit simplifying assumption $\frac{
 
 This last objective can be seen as learning the relative weights of the losses for each output. Large scale values $\sigma_2$ will decrease the contribution of $\cL_2(\W)$, whereas small scale $\sigma_2$ will increase its contribution. The scale is regulated by the last term in the equation. The objective is penalised when setting $\sigma_2$ too large. % (with the last term contributing a constant value $\log C$ -- with $C$ classes -- to the loss). 
 
-% However, we observe that scaling the logits in the SoftMax cross entropy loss does not add any additional modelling capacity. This is because the neural network is free to output logits with any arbitrary scale of its choosing from the final affine regression layer. We do not observe any improvement by using this loss, as the network compensates for the homoscedastic uncertainty, such that the net effect of this pre-softmax scaling is zero. This suggests why multi-task learning with a sum of classification losses has been successful in the past \cite{uhrig2016pixel,kokkinos2016ubernet} -- the SoftMax function inherently captures homoscedastic uncertainty.
+% However, we observe that scaling the logits in the SoftMax cross entropy loss does not add any additional modelling capacity. This is because the neural network is free to output logits with any arbitrary scale of its choosing from the final affine regression layer. We do not observe any improvement by using this loss, as the network compensates for the homoscedastic uncertainty, such that the net effect of this pre-softmax scaling is zero. This suggests why multi-task learning with a sum of classification losses has been successful in the past \citep{uhrig2016pixel,kokkinos2016ubernet} -- the SoftMax function inherently captures homoscedastic uncertainty.
 
 % What we observe when classification and regression losses are combined, is that the classification loss is under-weighted compared to the best performing weighting found through grid search. The data terms, $x$, in the regularisation term restrict the weighting compared to regression functions. Ideally, we would like to give the model capacity to freely increase the SoftMax cross entropy loss if required. For this reason, we reconsider the SoftMax cross entropy loss as a distance metric. Cross entropy is a divergence, and not strictly a distance because it is not symmetric. However, we approximate it as a distance which allows us to use the regression objective and remove the input, $x$, from the regularisation term. 
 %The multi-task objective with homoscedastic task uncertainty now becomes:
@@ -1674,10 +1675,10 @@ values, where $\exp(-s)$ is resolved to the positive domain giving valid values 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Scene Understanding Model}
+\subsection{Scene Understanding Tasks}
 \label{sec:arch}
 
-To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \cite{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}. The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. The purpose of the decoder is to learn a mapping from the shared features to an output. Specific architecture details are provided in \sct{model_analysis_mt}.
+To understand semantics and geometry we first propose an architecture which can learn regression and classification outputs, at a pixel level. Our architecture is a deep convolutional encoder decoder network \citep{badrinarayanan2017segnet}. Our model consists of a number of convolutional encoders which produce a shared representation, followed by a number of task-specific convolutional decoders. A high level summary is shown in \fig{teaser}. The purpose of the encoder is to learn a deep mapping to produce rich, contextual features, using domain knowledge from a number of related tasks. The purpose of the decoder is to learn a mapping from the shared features to an output. This section describes how we learn each of the scene understanding tasks.
 
 \textbf{Semantic Segmentation.}
 We use the cross-entropy loss to learn pixel-wise class probabilities, averaging the loss over the pixels with semantic labels in each mini-batch.
@@ -1686,9 +1687,9 @@ We use the cross-entropy loss to learn pixel-wise class probabilities, averaging
 \textbf{Instance Segmentation.}
 An intuitive method for defining which instance a pixel belongs to is an association to the instance's centroid.
 % In a practical setting, it is extremely unlikely two instances share the same centroid. 
-We use a regression approach for instance segmentation \cite{liang2015proposal}. This approach is inspired by \cite{leibe2008robust} which identifies instances using Hough votes from object parts. In this work we extend this idea by using votes from individual pixels using deep learning. We learn an instance vector, $\hat{x}_n$, for each pixel coordinate, $c_n$, which points to the centroid of the pixel's instance, $i_n$, such that $i_n=\hat{x}_n+c_n$. We train this regression with an $L_1$ loss using ground truth labels $x_n$, averaged over all labelled pixels, $N_I$, in a mini-batch: $\cL_{Instance} = \frac{1}{|N_I|} \sum_{N_I} \norm{x_n - \hat{x}_n}_1$.
+We use a regression approach for instance segmentation \citep{liang2015proposal}. This approach is inspired by \citep{leibe2008robust} which identifies instances using Hough votes from object parts. In this work we extend this idea by using votes from individual pixels using deep learning. We learn an instance vector, $\hat{x}_n$, for each pixel coordinate, $c_n$, which points to the centroid of the pixel's instance, $i_n$, such that $i_n=\hat{x}_n+c_n$. We train this regression with an $L_1$ loss using ground truth labels $x_n$, averaged over all labelled pixels, $N_I$, in a mini-batch: $\cL_{Instance} = \frac{1}{|N_I|} \sum_{N_I} \norm{x_n - \hat{x}_n}_1$.
 
-\fig{instance} details the representation we use for instance segmentation. \fig{instance}(a) shows the input image and a mask of the pixels which are of an instance class (at test time inferred from the predicted semantic segmentation). \fig{instance}(b) and \fig{instance}(c) show the ground truth and predicted instance vectors for both $x$ and $y$ coordinates. We then cluster these votes using OPTICS \cite{ankerst1999optics}, resulting in the predicted instance segmentation output in \fig{instance}(d).
+\fig{instance} details the representation we use for instance segmentation. \fig{instance}(a) shows the input image and a mask of the pixels which are of an instance class (at test time inferred from the predicted semantic segmentation). \fig{instance}(b) and \fig{instance}(c) show the ground truth and predicted instance vectors for both $x$ and $y$ coordinates. We then cluster these votes using OPTICS \citep{ankerst1999optics}, resulting in the predicted instance segmentation output in \fig{instance}(d).
 
 \begin{figure}[t]
 \begin{center}
@@ -1713,9 +1714,9 @@ We use a regression approach for instance segmentation \cite{liang2015proposal}.
 \label{fig:instance}
 \end{figure}
 
-One of the most difficult cases for instance segmentation algorithms to handle is when the instance mask is split due to occlusion. \fig{instancemask} shows that our method can handle these situations, by allowing pixels to vote for their instance centroid with geometry. Methods which rely on watershed approaches \cite{bai2016deep}, or instance edge identification approaches fail in these scenarios.
+One of the most difficult cases for instance segmentation algorithms to handle is when the instance mask is split due to occlusion. \fig{instancemask} shows that our method can handle these situations, by allowing pixels to vote for their instance centroid with geometry. Methods which rely on watershed approaches \citep{bai2016deep}, or instance edge identification approaches fail in these scenarios.
 
-To obtain segmentations for each instance, we now need to estimate the instance centres, $\hat{i}_n$. We propose to consider the estimated instance vectors, $\hat{x}_n$, as votes in a Hough parameter space and use a clustering algorithm to identify these instance centres. OPTICS \cite{ankerst1999optics}, is an efficient density based clustering algorithm. It is able to identify an unknown number of multi-scale clusters with varying density from a given set of samples. We chose OPTICS for two reasons. Crucially, it does not assume knowledge of the number of clusters like algorithms such as k-means \cite{macqueen1967some}. Secondly, it does not assume a canonical instance size or density like discretised binning approaches \cite{comaniciu2002mean}. Using OPTICS, we cluster the points $c_n+\hat{x}_n$ into a number of estimated instances, $\hat{i}$. We can then assign each pixel, $p_n$ to the instance closest to its estimated instance vector, $c_n+\hat{x}_n$.
+To obtain segmentations for each instance, we now need to estimate the instance centres, $\hat{i}_n$. We propose to consider the estimated instance vectors, $\hat{x}_n$, as votes in a Hough parameter space and use a clustering algorithm to identify these instance centres. OPTICS \citep{ankerst1999optics}, is an efficient density based clustering algorithm. It is able to identify an unknown number of multi-scale clusters with varying density from a given set of samples. We chose OPTICS for two reasons. Crucially, it does not assume knowledge of the number of clusters like algorithms such as k-means \citep{macqueen1967some}. Secondly, it does not assume a canonical instance size or density like discretised binning approaches \citep{comaniciu2002mean}. Using OPTICS, we cluster the points $c_n+\hat{x}_n$ into a number of estimated instances, $\hat{i}$. We can then assign each pixel, $p_n$ to the instance closest to its estimated instance vector, $c_n+\hat{x}_n$.
 
 \textbf{Depth Regression.}
 We train with supervised labels using pixel-wise metric inverse depth using a $L_1$ loss function: $\cL_{Depth} = \frac{1}{|N_D|} \sum_{N_D} \norm{d_n-\hat{d_n}}_1$. Our architecture estimates inverse depth, $\hat{d}_n$, because it can represent points at infinite distance (such as sky). We can obtain inverse depth labels, $d_n$, from a RGBD sensor or stereo imagery. Pixels which do not have an inverse depth label are ignored in the loss.
@@ -1736,8 +1737,29 @@ We train with supervised labels using pixel-wise metric inverse depth using a $L
 \label{fig:instancemask}
 \end{figure}
 
-\subsection{Model Analysis}
-\label{sct:model_analysis_mt}
+
+\subsection{Model Architecture}
+We base our model on the recently introduced DeepLabV3 \citep{chen2017rethinking} segmentation architecture.
+%We use \citep{wideresnet} as our base feature encoder (pretrained by \citep{bulo2017place}), with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
+We use ResNet101 \citep{he2016deep} as our base feature encoder, with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
+We then append dilated (atrous) convolutional ASPP module \citep{chen2017rethinking}. This module is designed to improve the contextual reasoning of the network. We use an ASPP module comprised of four parallel convolutional layers, with 256 output channels and dilation rates (1, 12, 24, 36), with kernel sizes ($1^2$, $3^2$, $3^2$, $3^2$). Additionally, we also apply global average pooling to the encoded features, and convolve them to 256 dimensions with a $1 \times 1$ kernel. We apply batch normalisation to each of these layers and concatenate the resulting 1280 features together. This produces the shared representation between each task.
+
+We then split the network, to decode this representation to a given task output. For each task, we construct a decoder consisting of two layers. First, we apply a $1 \times 1$ convolution, outputting 256 features, followed by batch normalisation and a non-linear activation. Finally, we convolve this output to the required dimensions for a given task. For classification, this will be equal to the number of semantic classes, otherwise the output will be 1 or 2 channels for depth or instance segmentation respectively. Finally, we apply bilinear upsampling
+to scale the output to the same resolution as the input.
+
+The majority of the model's parameters and depth is in the feature encoding, with very little flexibility in each task decoder. This illustrates the attraction of multi-task learning; most of the compute can be shared between each task to learn a better shared representation.
+
+\subsubsection{Optimisation.}
+For all experiments, we use an initial learning rate of $2.5\times10^{-3}$ and polynomial learning rate decay $(1-\frac{iter}{max~iter})^{0.9}$. We train using stochastic gradient descent, with Nesterov updates and momentum $0.9$ and weight decay $10^{-4}$. We conduct all experiments in this paper using PyTorch.
+
+For the experiments on the Tiny CityScapes validation dataset (using a down-sampled resolution of $128\times256$) we train over $50,000$ iterations, using $256 \times 256$ crops with batch size of 8 on a single NVIDIA 1080Ti GPU. We apply random horizontal flipping to the data.
+
+For the full-scale CityScapes benchmark experiment, we train over $100,000$ iterations with a batch size of 16. We apply random horizontal flipping (with probability 0.5) and random scaling (selected from 0.7 - 2.0) to the data during training, before making a $512 \times 512$ crop. The training data is sampled uniformly, and is randomly shuffled for each epoch. Training takes five days on a single computer with four NVIDIA 1080Ti GPUs.
+
+\subsection{Experiments}
+\label{sec:model_analysis_mt}
+
+We demonstrate the efficacy of our method on CityScapes \citep{Cordts2016Cityscapes}, a large dataset for road scene understanding. It comprises of stereo imagery, from automotive grade stereo cameras with a $22cm$ baseline, labelled with instance and semantic segmentations from 20 classes. Depth images are also provided, labelled using SGM \citep{Hirschmuller2008}, which we treat as pseudo ground truth. Additionally, we assign zero inverse depth to pixels labelled as sky. The dataset was collected from a number of cities in fine weather and consists of 2,975 training and 500 validation images at $2048\times1024$ resolution. 1,525 images are withheld for testing on an online evaluation server.
 
 \afterpage{%
     \clearpage% Flush earlier floats (otherwise order might not be correct)
@@ -1773,38 +1795,9 @@ Approx. optimal weights & 0.89 & 0.01 & 0.1 & 62.8\% & 3.61 & 0.549 \\
 \clearpage% Flush page
 }
 
-We demonstrate the efficacy of our method on CityScapes \cite{Cordts2016Cityscapes}, a large dataset for road scene understanding. It comprises of stereo imagery, from automotive grade stereo cameras with a $22cm$ baseline, labelled with instance and semantic segmentations from 20 classes. Depth images are also provided, labelled using SGM \cite{Hirschmuller2008}, which we treat as pseudo ground truth. Additionally, we assign zero inverse depth to pixels labelled as sky. The dataset was collected from a number of cities in fine weather and consists of 2,975 training and 500 validation images at $2048\times1024$ resolution. 1,525 images are withheld for testing on an online evaluation server.
-
-
-\paragraph{Model Architecture Details}
-We base our model on the recently introduced DeepLabV3 \cite{chen2017rethinking} segmentation architecture.
-%We use \cite{wideresnet} as our base feature encoder (pretrained by \cite{bulo2017place}), with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
-We use ResNet101 \cite{he2016deep} as our base feature encoder, with dilated convolutions, resulting in a feature map which is downsampled by a factor of 8 compared with the original input image. 
-We then append dilated (atrous) convolutional ASPP module \cite{chen2017rethinking}. This module is designed to improve the contextual reasoning of the network. We use an ASPP module comprised of four parallel convolutional layers, with 256 output channels and dilation rates (1, 12, 24, 36), with kernel sizes ($1^2$, $3^2$, $3^2$, $3^2$). Additionally, we also apply global average pooling to the encoded features, and convolve them to 256 dimensions with a $1 \times 1$ kernel. We apply batch normalisation to each of these layers and concatenate the resulting 1280 features together. This produces the shared representation between each task.
-
-We then split the network, to decode this representation to a given task output. For each task, we construct a decoder consisting of two layers. First, we apply a $1 \times 1$ convolution, outputting 256 features, followed by batch normalisation and a non-linear activation. Finally, we convolve this output to the required dimensions for a given task. For classification, this will be equal to the number of semantic classes, otherwise the output will be 1 or 2 channels for depth or instance segmentation respectively. Finally, we apply bilinear upsampling
-to scale the output to the same resolution as the input.
-
-The majority of the model's parameters and depth is in the feature encoding, with very little flexibility in each task decoder. This illustrates the attraction of multi-task learning; most of the compute can be shared between each task to learn a better shared representation.
-
-\paragraph{Optimisation.}
-For all experiments, we use an initial learning rate of $2.5\times10^{-3}$ and polynomial learning rate decay $(1-\frac{iter}{max~iter})^{0.9}$. We train using stochastic gradient descent, with Nesterov updates and momentum $0.9$ and weight decay $10^{-4}$. We conduct all experiments in this paper using PyTorch.
-
-For the experiments on the Tiny CityScapes validation dataset (using a down-sampled resolution of $128\times256$) we train over $50,000$ iterations, using $256 \times 256$ crops with batch size of 8 on a single NVIDIA 1080Ti GPU. We apply random horizontal flipping to the data.
-
-For the full-scale CityScapes benchmark experiment, we train over $100,000$ iterations with a batch size of 16. We apply random horizontal flipping (with probability 0.5) and random scaling (selected from 0.7 - 2.0) to the data during training, before making a $512 \times 512$ crop. The training data is sampled uniformly, and is randomly shuffled for each epoch. Training takes five days on a single computer with four NVIDIA 1080Ti GPUs.
-
-\subsection{Model Analysis}
-\label{sec:tasks}
-
 In \tbl{multitasks} we compare individual models to multi-task learning models using a na{\"i}ve weighted loss or the task uncertainty weighting we propose in this paper. To reduce the computational burden, we train each model at a reduced resolution of $128\times256$ pixels, over $50,000$ iterations. When we downsample the data by a factor of four, we also need to scale the disparity labels accordingly. \tbl{multitasks} clearly illustrates the benefit of multi-task learning, which obtains significantly better performing results than individual task models. For example, using our method we improve classification results from $59.4\%$ to $63.4\%$.
 
 We also compare to a number of na{\"i}ve multi-task losses. We compare weighting each task equally and using approximately optimal weights. Using a uniform weighting results in poor performance, in some cases not even improving on the results from the single task model. Obtaining approximately optimal weights is difficult with increasing number of tasks as it requires an expensive grid search over parameters. However, even these weights perform worse compared with our proposed method. \fig{scale_factor} shows that using task uncertainty weights can even perform better compared to optimal weights found through fine-grained grid search. We believe that this is due to two reasons. First, grid search is restricted in accuracy by the resolution of the search. Second, optimising the task weights using a homoscedastic noise term allows for the weights to be dynamic during training. In general, we observe that the uncertainty term decreases during training which improves the optimisation process.
-
-In Appendix \ref{apdx:analysis} we find that our task-uncertainty loss is robust to the initialisation chosen for the parameters. These quickly converge to a similar optima in a few hundred training iterations. We also find the resulting task weightings varies throughout the course of training. For our final model (in \tbl{benchmarks}), at the end of training, the losses are weighted with the ratio 43 : 1 : 0.16 for semantic segmentation, depth regression and instance segmentation, respectively.
-
-Finally, we benchmark our model using the full-size CityScapes dataset. In \tbl{benchmarks} we compare to a number of other state of the art methods in all three tasks. Our method is the first model which completes all three tasks with a single model. We compare favourably with other approaches, outperforming many which use comparable training data and inference tools. \fig{cityscapesqual} shows some qualitative examples of our model.
-
 
 
 \begin{figure*}[t]
@@ -1849,6 +1842,9 @@ Finally, we benchmark our model using the full-size CityScapes dataset. In \tbl{
 	\label{fig:cityscapesqual}
 \end{figure*}
 
+We benchmark our model using the full-size CityScapes dataset. In \tbl{benchmarks} we compare to a number of other state of the art methods in all three tasks. Our method is the first model which completes all three tasks with a single model. We compare favourably with other approaches, outperforming many which use comparable training data and inference tools. \fig{cityscapesqual} shows some qualitative examples of our model.
+
+
 
 \afterpage{%
     \clearpage% Flush earlier floats (otherwise order might not be correct)
@@ -1864,37 +1860,28 @@ Finally, we benchmark our model using the full-size CityScapes dataset. In \tbl{
 			\multicolumn{11}{c}{\textbf{Semantic segmentation, instance segmentation and depth regression methods (this work)}}\\ \midrule
 			Multi-Task Learning & 78.5 & 57.4 & 89.9 & 77.7 & 21.6 & 39.0 & 35.0 & 37.0 & 2.92 & 5.88 \\ \midrule%& - \\
 			\multicolumn{11}{c}{\textbf{Semantic segmentation and instance segmentation methods}}\\ \midrule
-			Uhrig et al. \cite{uhrig2016pixel} & 64.3 & 41.6 & 85.9 & 73.9 & 8.9 & 21.1 & 15.3 & 16.7 &-&-\\ \midrule%& - \\ \hline
+			Uhrig et al. \citep{uhrig2016pixel} & 64.3 & 41.6 & 85.9 & 73.9 & 8.9 & 21.1 & 15.3 & 16.7 &-&-\\ \midrule%& - \\ \hline
 			\multicolumn{11}{c}{\textbf{Instance segmentation only methods}}\\ \midrule
-			Mask R-CNN \cite{he2017maskrcnn} &-&-&-&-& 26.2 & 49.9 & 37.6 & 40.1 & -& -\\ %& 60.0 \\ \hline
-            Deep Watershed \cite{bai2016deep} &-&-&-&-& 19.4 & 35.3 & 31.4 & 36.8 & -& -\\ %& 60.0 \\ \hline
-            R-CNN + MCG \cite{Cordts2016Cityscapes} &-&-&-&-& 4.6 & 12.9 & 7.7 & 10.3 & -& -\\ \midrule %& 60.0 \\ \hline
+			Mask R-CNN \citep{he2017maskrcnn} &-&-&-&-& 26.2 & 49.9 & 37.6 & 40.1 & -& -\\ %& 60.0 \\ \hline
+            Deep Watershed \citep{bai2016deep} &-&-&-&-& 19.4 & 35.3 & 31.4 & 36.8 & -& -\\ %& 60.0 \\ \hline
+            R-CNN + MCG \citep{Cordts2016Cityscapes} &-&-&-&-& 4.6 & 12.9 & 7.7 & 10.3 & -& -\\ \midrule %& 60.0 \\ \hline
 			\multicolumn{11}{c}{\textbf{Semantic segmentation only methods}}\\ \midrule
-			DeepLab V3 \cite{chen2017rethinking} & 81.3 & 60.9 & 91.6 & 81.7 &-&-&-&-&-&-\\%& 
-			PSPNet \cite{zhao2017pspnet} & 81.2 & 59.6 & 91.2 & 79.2 &-&-&-&-&-&-\\%& 
-			%LRR-4x \cite{ghiasi2016laplacian} & 71.8 & 47.9 & 88.4 & 73.9 &-&-&-&-&-&-\\%& 
-			Adelaide \cite{lin2015efficient} & 71.6 & 51.7 & 87.3 & 74.1 &-&-&-&-&-&-\\%& 4.0\\
-			%DeepLab \cite{chen2016deeplab} & 70.4 & 42.6 & 86.4 & 67.7 &-&-&-&-&-&-\\%& 4.0\\
-			%Dilation \cite{YuKoltun2016} & 67.1 & 42.0 & 86.5 & 71.1 &-&-&-&-&-&-\\%& 4.0 \\
-			%FCN 8s \cite{long2014fully} & 65.3 & 41.7 & 85.7 & 70.1 &-&-&-&-&-&-\\%& 0.5 \\
-			%SegNet \cite{badrinarayanan2017segnet} & 57.0 & 32.0 & 79.1 & 61.9 &-&-&-&-&-&-\\%& 0.06 \\
+			DeepLab V3 \citep{chen2017rethinking} & 81.3 & 60.9 & 91.6 & 81.7 &-&-&-&-&-&-\\%& 
+			PSPNet \citep{zhao2017pspnet} & 81.2 & 59.6 & 91.2 & 79.2 &-&-&-&-&-&-\\%& 
+			%LRR-4x \citep{ghiasi2016laplacian} & 71.8 & 47.9 & 88.4 & 73.9 &-&-&-&-&-&-\\%& 
+			Adelaide \citep{lin2015efficient} & 71.6 & 51.7 & 87.3 & 74.1 &-&-&-&-&-&-\\%& 4.0\\
+			%DeepLab \citep{chen2016deeplab} & 70.4 & 42.6 & 86.4 & 67.7 &-&-&-&-&-&-\\%& 4.0\\
+			%Dilation \citep{YuKoltun2016} & 67.1 & 42.0 & 86.5 & 71.1 &-&-&-&-&-&-\\%& 4.0 \\
+			%FCN 8s \citep{long2014fully} & 65.3 & 41.7 & 85.7 & 70.1 &-&-&-&-&-&-\\%& 0.5 \\
+			%SegNet \citep{badrinarayanan2017segnet} & 57.0 & 32.0 & 79.1 & 61.9 &-&-&-&-&-&-\\%& 0.06 \\
             \bottomrule
 		\end{tabular}}
-	\caption[CityScapes Benchmark.]{\textbf{CityScapes Benchmark \cite{Cordts2016Cityscapes}.} We show results from the test dataset using the full resolution of $1024\times2048$ pixels. For the full leaderboard, please see \url{www.cityscapes-dataset.com/benchmarks}. The disparity (inverse depth) metrics were computed against the CityScapes depth maps, which are sparse and computed using SGM stereo \cite{hirschmuller2005accurate}. Note, these comparisons are not entirely fair, as many methods use ensembles of different training datasets. Our method is the first to address all three tasks with a single model.}
+	\caption[CityScapes Benchmark.]{\textbf{CityScapes Benchmark \citep{Cordts2016Cityscapes}.} We show results from the test dataset using the full resolution of $1024\times2048$ pixels. For the full leaderboard, please see \url{www.cityscapes-dataset.com/benchmarks}. The disparity (inverse depth) metrics were computed against the CityScapes depth maps, which are sparse and computed using SGM stereo \citep{hirschmuller2005accurate}. Note, these comparisons are not entirely fair, as many methods use ensembles of different training datasets. Our method is the first to address all three tasks with a single model.}
 	\label{tbl:benchmarks}
 \end{table*}
 \end{landscape}
 \clearpage% Flush page
 }
-
-We have shown that correctly weighting loss terms is of paramount importance for multi-task learning problems. We demonstrated that homoscedastic (task) uncertainty is an effective way to weight losses. We derived a principled loss function which can learn a relative weighting automatically from the data and is robust to the weight initialization. We showed that this can improve performance for scene understanding tasks with a unified architecture for semantic segmentation, instance segmentation and per-pixel depth regression. We demonstrated modelling task-dependent homoscedastic uncertainty improves the model's representation and each task's performance when compared to separate models trained on each task individually.
-
-There are many interesting questions left unanswered. Firstly, our results show that there is usually not a single optimal weighting for all tasks. Therefore, what is the optimal weighting? Is multi-task learning an ill-posed optimisation problem without a single higher-level goal?
-
-A second interesting question is where the optimal location is for splitting the shared encoder network into separate decoders for each task? And, what network depth is best for the shared multi-task representation?
-
-Finally, why do the semantics and depth tasks out-perform the semantics and instance tasks results in \tbl{multitasks}? Clearly the three tasks explored in this paper are complimentary and useful for learning a rich representation about the scene. It would be beneficial to be able to quantify the relationship between tasks and how useful they would be for multi-task representation learning. \citep{zamir2018taskonomy} is some excellent initial work towards this goal.
-
 
 
 This task uncertainty loss is also robust to the value we use to initialise the task uncertainty values.
@@ -1904,9 +1891,7 @@ One of the attractive properties of our approach to weighting multi-task losses 
 
 Interestingly, we observe that this loss allows the network to dynamically tune the weighting. Typically, the homoscedastic noise terms decrease in magnitude as training progresses. This makes sense, as during training the model becomes more effective at a task. Therefore the error, and uncertainty, will decrease. This has a side-effect of increasing the effective learning rate -- because the overall uncertainty decreases, the weight for each task's loss increases. In our experiments we compensate for this by annealing the learning rate with a power law.
 
-Finally, a comment on the model's failure modes. The model exhibits similar failure modes to state-of-the-art single-task models. For example, failure with objects out of the training distribution, occlusion or visually challenging situations. However, we also observe our multi-task model tends to fail with similar effect in all three modalities. Ie. an erroneous pixel's prediction in one task will often be highly correlated with error in another modality. Some examples can be seen in \fig{cityscapesquallarge}.
-
-\begin{figure*}[t]
+\begin{figure*}[p]
 \begin{subfigure}[t]{0.32\linewidth}
 \begin{center}
   %\includegraphics[width=0.32\linewidth]{plots/class_loss.eps}
@@ -1933,9 +1918,7 @@ Finally, a comment on the model's failure modes. The model exhibits similar fail
 \end{subfigure}
    \caption[Convergence of homoscedastic noise and task losses.]{\textbf{Training plots showing convergence of homoscedastic noise and task loss} for an array of initialisation choices for the homoscedastic uncertainty terms for all three tasks. Each plot shows the the homoscedastic noise value optimises to the same solution from a variety of initialisations. Despite the network taking $10,000+$ iterations for the training loss to converge, the task uncertainty converges very rapidly after only $~100$ iterations.}
 \label{fig:convergence}
-\end{figure*}
 
-\begin{figure*}[t]
 \begin{center}
 \begin{subfigure}[t]{0.32\linewidth}
 \begin{center}
@@ -2140,6 +2123,16 @@ Finally, a comment on the model's failure modes. The model exhibits similar fail
 \end{figure*}
 \clearpage% Flush page
 }
+
+\subsection{Discussion}
+
+There are many interesting questions left unanswered. Firstly, our results show that there is usually not a single optimal weighting for all tasks. Therefore, what is the optimal weighting? Is multi-task learning an ill-posed optimisation problem without a single higher-level goal?
+
+A second interesting question is where the optimal location is for splitting the shared encoder network into separate decoders for each task? And, what network depth is best for the shared multi-task representation?
+
+Why do the semantics and depth tasks out-perform the semantics and instance tasks results in \tbl{multitasks}? Clearly the three tasks explored in this paper are complimentary and useful for learning a rich representation about the scene. It would be beneficial to be able to quantify the relationship between tasks and how useful they would be for multi-task representation learning. \citep{zamir2018taskonomy} is some excellent initial work towards this goal.
+
+Finally, a comment on the model's failure modes. The model exhibits similar failure modes to state-of-the-art single-task models. For example, failure with objects out of the training distribution, occlusion or visually challenging situations. However, we also observe our multi-task model tends to fail with similar effect in all three modalities. Ie. an erroneous pixel's prediction in one task will often be highly correlated with error in another modality. Some examples can be seen in \fig{cityscapesquallarge}.
 
 
 
