@@ -25,16 +25,13 @@ We briefly summarise the findings and limitations of each chapter in this thesis
 
 \cref{motion} introduces deep learning models which can learn video scene understanding over long video sequences. We show the benefits of explicitly modelling depth and motion. In order to train models over video we find there are a number of important factors to consider. We introduce temporal loss functions and show how to jointly learn semantic segmentation with supervised learning, and depth and optical flow with unsupervised learning.
 
-\section{Applications}
 
-This work has an array of practical applications. \cref{ch6:applications} shows technology which directly use the ideas and software developed in this thesis. We briefly describe three general application areas of this work.
-
-\begin{figure}[t]
+\begin{figure}[pt]
 \center
     \begin{subfigure}[t]{0.32\textwidth}
         \centering
           \includegraphics[height=5cm]{toyota.jpg}
-        \caption{Autonomous vehicles and self-driving cars.}
+        \caption{Autonomous vehicles.}
     \end{subfigure}
     \begin{subfigure}[t]{0.32\textwidth}
         \centering
@@ -45,15 +42,25 @@ This work has an array of practical applications. \cref{ch6:applications} shows 
         \centering
           \includegraphics[height=5cm]{skydio.png}
         \caption{Autonomous unmanned aerial vehicles.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.98\textwidth}
+        \centering
+          \includegraphics[height=6.7cm]{wayve_autonomous_car.png}
+        \caption{Demonstration of the algorithms from \cref{motion} on a self-driving car in Cambridge, UK.}
     \end{subfigure}%
-\caption[Applications of technology in this thesis]{\textbf{Applications of the technology developed in this thesis.} Algorithms and software which was written as part of this thesis are inside many of today's products, including these three examples. (a) shows a prototype autonomous vehicle running SegNet for real-time scene understanding. (b) shows a smart-city sensor by Vivacity \citep{vivacity} running software from this thesis. (c) shows a prototype drone from Skydio \citep{skydio} using algorithms and software from \cref{scene_understanding} to understand scene semantics and geometry.}
+\caption[Applications of technology in this thesis]{\textbf{Applications of the technology developed in this thesis.} Algorithms and software which was written as part of this thesis are inside many of today's products, including these three examples. (a) shows a prototype autonomous vehicle running SegNet for real-time scene understanding. (b) shows a smart-city sensor by Vivacity \citep{vivacity} running software from this thesis. (c) shows a prototype drone from Skydio \citep{skydio} using algorithms and software from \cref{scene_understanding} to understand scene semantics and geometry. Finally, (d) demonstrates the algorithms from \cref{motion} operating in real-time on a self-driving car in Cambridge, UK.}
 \label{ch6:applications}
 \end{figure} 
+
+\section{Applications}
+
+This work has an array of practical applications. \cref{ch6:applications} shows technology which directly use the ideas and software developed in this thesis. We briefly describe three general application areas of this work.
+
 
 \subsection{Robotics}
 Understanding the scene’s geometry and semantics is a fundamental task for autonomous robots. This provides information of the free space to avoid obstacles and where objects. This enables robots to interact intelligently with the world. The ideas from \cref{scene_understanding} and \cref{motion} allow us to build such a system with end-to-end deep learning.
 
-Cameras are attractive sensors because they are cheap, they are passive and require low-power. The algorithms presented in this thesis can operate in real-time on robotic platforms with relatively cheap cameras and computation. For example, on autonomous vehicles, self-driving cars, drones and domestic robots \citep{kendall2014board,mcallister2017av_bdl}.
+Cameras are attractive sensors because they are cheap, they are passive and require low-power. The algorithms presented in this thesis can operate in real-time on robotic platforms with relatively cheap cameras and computation. For example, on autonomous vehicles, self-driving cars, drones and domestic robots \citep{kendall2014board,mcallister2017av_bdl,kendall2018learning}.
 
 The challenges for this application are about obtaining sufficient and robust performance within a real-time computational budget. The ideas about using geometry will be beneficial here. It is also critical these systems understand their uncertainty to make safe policy decisions based on well-founded information. Therefore, the ideas presented on modelling uncertainty are also highly useful.
 
@@ -84,4 +91,4 @@ This thesis has argued that understanding uncertainty is essential for safe comp
 This thesis has addressed algorithms for understanding semantics and geometry from both individual images and video sequences. However, another large problem which has not been mentioned so far is, \textit{what is going to happen next?} Predicting scene dynamics is an important problem to solve in computer vision, especially for applications in robotics. While there is some initial work in this area \citep{luc2017predicting}, this problem would benefit from the three themes of this thesis; end-to-end deep learning, geometry and uncertainty.
 
 \subsection{Learning to Act}
-Finally, the purpose of a brain is for movement \citep{wolpert2000computational}. Therefore, an interesting question is what is the point of learning these representations of semantics, motion and geometry? Ultimately, these algorithms are useful to learn representations for visuomotor control (systems that reason from sensory input to control output). Today, most visuomotor algorithms are naive and do not consider geometry and uncertainty \citep{levine2016end}. Benefits could be observed from leveraging the ideas in this thesis about geometry and uncertainty.
+Finally, the purpose of a brain is for movement \citep{wolpert2000computational}. Therefore, an interesting question is what is the point of learning these representations of semantics, motion and geometry? Ultimately, these algorithms are useful to learn representations for visuomotor control (systems that reason from sensory input to control output). Today, most visuomotor algorithms are naive and do not consider geometry and uncertainty \citep{levine2016end,kendall2018learning}. Benefits could be observed from leveraging the ideas in this thesis about geometry and uncertainty.
